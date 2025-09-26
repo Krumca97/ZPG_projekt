@@ -43,7 +43,7 @@ const char* vertex_shader =
 "     gl_Position = vec4 (vp, 1.0);"
 "}";
 
-//fragment shader
+//fragment shader trojuhelnik
 const char* fragment_shader_triangle =
 "#version 330\n"
 "out vec4 fragColor;"
@@ -211,5 +211,6 @@ void Application::run()
 		glfwSwapBuffers(window);
 	}
 }
+
 
 
