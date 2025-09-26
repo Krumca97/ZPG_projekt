@@ -8,6 +8,6 @@ public:
 	ShaderProgram(const char* vertex_shader, const char* fragment_shader);
 	void set_shader();
 private:
-	GLuint shader_id;
+	GLuint shaderProgram;
 };
 

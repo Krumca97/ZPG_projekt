@@ -17,6 +17,7 @@ float points_square[] =
 	-0.95f, -0.95f, 0.0f,
 	-0.95f, -0.75f, 0.0f,
 	-0.75f, -0.95f, 0.0f,
+
 	-0.75f, -0.95f, 0.0f,
 	-0.95f, -0.75f, 0.0f,
 	-0.75f, -0.75f, 0.0f
@@ -25,13 +26,13 @@ float points_square[] =
 //krychle
 float points_rectangle[] =
 {
-	0.75f, 0.75f, 0.0f,
-	0.75f, 0.85f, 0.0f,
-	0.95f, 0.75f, 0.0f,
+	0.75f, 0.75f, 0.0f,   1.0f, 0.0f, 0.0f,  
+	0.75f, 0.85f, 0.0f,   0.0f, 1.0f, 0.0f,
+	0.95f, 0.75f, 0.0f,   0.0f, 0.0f, 1.0f,
 
-	0.75f, 0.85f, 0.0f,
-	0.95f, 0.85f, 0.0f,
-	0.95f, 0.75f, 0.0f
+	0.75f, 0.85f, 0.0f,   0.0f, 1.0f, 0.0f,
+	0.95f, 0.85f, 0.0f,   1.0f, 1.0f, 0.0f,
+	0.95f, 0.75f, 0.0f,   0.0f, 0.0f, 1.0f
 };
 
 
@@ -41,6 +42,17 @@ const char* vertex_shader =
 "layout(location=0) in vec3 vp;"
 "void main () {"
 "     gl_Position = vec4 (vp, 1.0);"
+"}";
+
+//vertex shader obdelnik
+const char* vertex_shader_rectangle =
+"#version 330\n"
+"layout(location=0) in vec3 vp;"
+"layout(location=1) in vec3 vc;"
+"out vec3 color;"
+"void main () {"
+"     gl_Position = vec4 (vp, 1.0);"
+"	  color = vc;"
 "}";
 
 //fragment shader trojuhelnik
@@ -62,9 +74,10 @@ const char* fragment_shader_square =
 //fragment shader obdelnik
 const char* fragment_shader_rectangle =
 "#version 330\n"
-"out vec4 fragColor;"
-"void main () {"
-"     fragColor = vec4 (0.0, 0.0, 1.0, 1.0);"
+"in vec3 color;\n"
+"out vec4 fragColor;\n"
+"void main() {\n"
+"    fragColor = vec4(color, 1.0);\n"
 "}";
 
 
@@ -169,7 +182,7 @@ void Application::createShaders()
 {
 	shaderTriangle = new ShaderProgram(vertex_shader, fragment_shader_triangle);
 	shaderSquare = new ShaderProgram(vertex_shader, fragment_shader_square);
-	shaderRectangle = new ShaderProgram(vertex_shader, fragment_shader_rectangle);
+	shaderRectangle = new ShaderProgram(vertex_shader_rectangle, fragment_shader_rectangle);
 }
 
 void Application::createBuffers()
@@ -182,7 +195,7 @@ void Application::createBuffers()
 	std::vector<float>square(points_square, points_square + sizeof(points_square) / sizeof(float));
 	shapeSquare->load_data(square);
 
-	shapeRectangle = new Shape(3, 3, 0);
+	shapeRectangle = new Shape(6, 3, 3);
 	std::vector<float>rectangle(points_rectangle, points_rectangle + sizeof(points_rectangle) / sizeof(float));
 	shapeRectangle->load_data(rectangle);
 
@@ -211,7 +224,5 @@ void Application::run()
 		glfwSwapBuffers(window);
 	}
 }
-
-
 
 

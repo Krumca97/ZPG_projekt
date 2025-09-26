@@ -14,10 +14,10 @@ ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_sha
 	glCompileShader(fragmentShader);
 
 	//nastarovani shaderu
-	shader_id = glCreateProgram();
-	glAttachShader(shader_id, fragmentShader);
-	glAttachShader(shader_id, vertexShader);
-	glLinkProgram(shader_id);
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, fragmentShader);
+	glAttachShader(shaderProgram, vertexShader);
+	glLinkProgram(shaderProgram);
 
 	//uklid
 	glDeleteShader(vertexShader);
@@ -25,13 +25,13 @@ ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_sha
 
 	//kontrola
 	GLint status;
-	glGetProgramiv(shader_id, GL_LINK_STATUS, &status);
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
 	{
 		GLint infoLogLength;
-		glGetProgramiv(shader_id, GL_INFO_LOG_LENGTH, &infoLogLength);
+		glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
 		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetProgramInfoLog(shader_id, infoLogLength, NULL, strInfoLog);
+		glGetProgramInfoLog(shaderProgram, infoLogLength, NULL, strInfoLog);
 		fprintf(stderr, "Linker failure: %s\n", strInfoLog);
 		delete[] strInfoLog;
 	}
@@ -39,7 +39,6 @@ ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_sha
 
 void ShaderProgram::set_shader()
 {
-	glUseProgram(shader_id);
+	glUseProgram(shaderProgram);
 }
-
 
