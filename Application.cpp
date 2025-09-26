@@ -196,10 +196,10 @@ void Application::run()
 		// clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw triangles
+		// draw triangle
 		modelTriangle->draw();
 
-		//draw rectangles
+		//draw square
 		modelSquare->draw();
 
 		//draw rectangle
@@ -211,6 +211,7 @@ void Application::run()
 		glfwSwapBuffers(window);
 	}
 }
+
 
 
 
