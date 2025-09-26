@@ -23,7 +23,7 @@ ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_sha
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	//kontrola nevim jak zatim
+	//kontrola
 	GLint status;
 	glGetProgramiv(shader_id, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
@@ -41,4 +41,5 @@ void ShaderProgram::set_shader()
 {
 	glUseProgram(shader_id);
 }
+
 
