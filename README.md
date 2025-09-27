@@ -7,7 +7,7 @@ Vytvořil: Aleš Laník, LAN0229.
 
 ## Linkování knihoven
 
-Tento návod ukazuje **kde stáhnout** knihovny **GLFW**, **GLEW** a **GLM** z internetu a **jak je nalinkovat** ve **Visual Studiu*.  
+Tento návod ukazuje **kde stáhnout** knihovny **GLFW**, **GLEW** a **GLM** z internetu a **jak je nalinkovat** ve **Visual Studiu**.  
 Poznámka" **`glew32.dll` musí být umístěná u .exe**.
 
 ---
