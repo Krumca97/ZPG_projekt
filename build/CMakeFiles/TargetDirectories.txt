@@ -1,0 +1,3 @@
+/home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/CMakeFiles/Zakladni_Projekt.dir
+/home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/CMakeFiles/edit_cache.dir
+/home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/CMakeFiles/rebuild_cache.dir
