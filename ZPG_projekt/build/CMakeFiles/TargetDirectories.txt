@@ -1,0 +1,3 @@
+/home/krumca/Coding/Zpg/ZPG_projekt-main/ZPG_projekt/build/CMakeFiles/Projekt.dir
+/home/krumca/Coding/Zpg/ZPG_projekt-main/ZPG_projekt/build/CMakeFiles/edit_cache.dir
+/home/krumca/Coding/Zpg/ZPG_projekt-main/ZPG_projekt/build/CMakeFiles/rebuild_cache.dir
