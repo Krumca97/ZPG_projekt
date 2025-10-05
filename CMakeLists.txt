@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Zdrojáky projektu – uveď všechny .cpp
+# Zdrojáky projektu 
 set(SOURCES
     main.cpp
     Application.cpp
@@ -25,12 +25,12 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Knihovny
-find_package(OpenGL REQUIRED)       # poskytuje target OpenGL::GL
-find_package(glfw3 REQUIRED)        # na Ubuntu (libglfw3-dev) poskytuje target glfw
-find_package(GLEW REQUIRED)         # poskytuje target GLEW::GLEW
+find_package(OpenGL REQUIRED)       
+find_package(glfw3 REQUIRED)        
+find_package(GLEW REQUIRED)        
 
-# glm je obvykle header-only. Zkusíme najít config a jinak jen include dir.
-find_package(glm QUIET)             # pokud je k dispozici, dá target glm::glm
+# glm je obvykle header-only. 
+find_package(glm QUIET)            
 if(glm_FOUND)
     target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
 else()
@@ -49,14 +49,14 @@ target_link_libraries(${PROJECT_NAME}
         GLEW::GLEW
 )
 
-# (volitelné) Přísnější varování na GCC/Clang/MSVC
+#Varovan9 a debugg
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 elseif (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /permissive-)
 endif()
 
-# (volitelné) Output dir, ať se binárka ukládá do build/bin
+# outpu
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
