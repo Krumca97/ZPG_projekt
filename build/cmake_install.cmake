@@ -1,4 +1,4 @@
-# Install script for directory: /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229
+# Install script for directory: /home/ales/Codding/ZPG/ZPG_projekt
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ales/Codding/ZPG/ZPG_projekt/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

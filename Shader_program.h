@@ -3,17 +3,22 @@
 #include <iostream>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include "Shader.h"
 
 class ShaderProgram
 {
 public:
-	ShaderProgram(const char* vertex_shader, const char* fragment_shader);
-	void set_shader();
+	ShaderProgram();
+	~ShaderProgram();
 
-	void setMat4(const char* name,const glm::mat4& m);
-	void setVec3(const char* name,const glm::vec3& v);
-	
+	bool link(Shader& vertex_shader, Shader& fragment_shader);
+	void use_shader_program();
+
+	void setUniform(const char* name,int value);
+	void setUniform(const char* name,float value);
+	void setUniform(const char* name,const glm::mat4& matrix);
+	void setUniform(const char* name,const glm::vec3& vector);
 private:
-	GLuint shaderProgram;
+	GLuint shaderProgram_id;
 };
 

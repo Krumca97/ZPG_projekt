@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Název projektu a standard C++
-project(Zakladni_Projekt LANGUAGES CXX)
+project(Projekt LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -10,9 +10,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SOURCES
     main.cpp
     Application.cpp
-    Model.cpp
+    DrawAbleObject.cpp
     Shader_program.cpp
-    Shape.cpp
+    Shader.cpp
+    Model.cpp
+    Scene.cpp
+    Transformation.h
+    TransformationRotate.cpp
+    TransformationScale.cpp
+    TransformationTranslate.cpp
+    TransformationGroup.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

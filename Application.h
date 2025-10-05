@@ -10,41 +10,76 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-//Include the standard C++ headers  
 #include <stdlib.h>
 #include <stdio.h>
-#include "Shape.h"
+
 #include "Model.h"
+#include "DrawAbleObject.h"
 #include "Shader_program.h"
+#include "Scene.h"
+
+//structura pro vytvoreni 20 objektu
+struct ObjectGroup 
+{
+    Shader* vertex_shader;
+	Shader* fragment_shader;
+    ShaderProgram* shader;
+    Model* model;
+    std::vector<DrawAbleObject*> objects;
+    std::string name;
+};
 
 class Application 
 {
 public:
-	static int Start();
+	void check();
 	bool initialization();
 	void createShaders();
 	void createBuffers();
+	void buildScene();
 	void run();
 
 private:
 
 	GLFWwindow* window = nullptr;
-	
 
+	//fialovy trojuhelnik
+	Shader* vertexShaderTrinagle = nullptr;
+	Shader* fragmentShaderTriangle = nullptr;
 	ShaderProgram* shaderTriangle = nullptr;
-	ShaderProgram* shaderSquare = nullptr;
-	ShaderProgram* shaderRectangle = nullptr;
-	ShaderProgram* shaderBush = nullptr;
-
-	Shape* shapeTriangle = nullptr;
-	Shape* shapeSquare = nullptr;
-	Shape* shapeRectangle = nullptr;
-	Shape* shapeBush = nullptr;
-
 	Model* modelTriangle = nullptr;
-	Model* modelSquare = nullptr;
+	DrawAbleObject* objectTriangle = nullptr;
+
+	//Vytvoreni ctverece
+	Shader* vertexShaderRectangle = nullptr;
+	Shader* fragmentShaderRectangle = nullptr;
+	ShaderProgram* shaderRectangle = nullptr;
 	Model* modelRectangle = nullptr;
-	Model* modelBush = nullptr;
+	DrawAbleObject* objectRectangle = nullptr;
+
+	//Kulicky
+	Shader* vertexShaderSphere = nullptr;
+	Shader* fragmentShaderSphere = nullptr;
+	ShaderProgram* shaderSphere = nullptr;
+	Model* modelSphere = nullptr;
+	DrawAbleObject* object1Sphere = nullptr;
+	DrawAbleObject* object2Sphere = nullptr;
+	DrawAbleObject* object3Sphere = nullptr;
+	DrawAbleObject* object4Sphere = nullptr;
+
+	//Scena 4 -> 20 modelu
+	std::vector<ObjectGroup*> groupForScene4;
+	Shader* vertexShaderUniverzal = nullptr;
+	Shader* fragmentShaderUniverzal = nullptr;
+	ShaderProgram* shaderUniverzal = nullptr;
+	Model* modelUniverzal = nullptr;
+
+	//Scena
+	Scene* scene1 = nullptr;
+	Scene* scene2 = nullptr;
+	Scene* scene3 = nullptr;
+	Scene* scene4 = nullptr;
+	Scene* sceneActual = scene1;	
 
 	static void error_callback(int error, const char* description);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

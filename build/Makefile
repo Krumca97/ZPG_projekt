@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229
+CMAKE_SOURCE_DIR = /home/ales/Codding/ZPG/ZPG_projekt
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build
+CMAKE_BINARY_DIR = /home/ales/Codding/ZPG/ZPG_projekt/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/CMakeFiles /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ales/Codding/ZPG/ZPG_projekt/build/CMakeFiles /home/ales/Codding/ZPG/ZPG_projekt/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ales/Codding/ZPG/ZPG_projekt-main/Projekt_ZPG_LAN0229/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ales/Codding/ZPG/ZPG_projekt/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Zakladni_Projekt
+# Target rules for targets named Projekt
 
 # Build rule for target.
-Zakladni_Projekt: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Zakladni_Projekt
-.PHONY : Zakladni_Projekt
+Projekt: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Projekt
+.PHONY : Projekt
 
 # fast build rule for target.
-Zakladni_Projekt/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/build
-.PHONY : Zakladni_Projekt/fast
+Projekt/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/build
+.PHONY : Projekt/fast
 
 Application.o: Application.cpp.o
 .PHONY : Application.o
 
 # target to build an object file
 Application.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Application.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Application.cpp.o
 .PHONY : Application.cpp.o
 
 Application.i: Application.cpp.i
@@ -142,7 +142,7 @@ Application.i: Application.cpp.i
 
 # target to preprocess a source file
 Application.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Application.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Application.cpp.i
 .PHONY : Application.cpp.i
 
 Application.s: Application.cpp.s
@@ -150,15 +150,39 @@ Application.s: Application.cpp.s
 
 # target to generate assembly for a file
 Application.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Application.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Application.cpp.s
 .PHONY : Application.cpp.s
+
+DrawAbleObject.o: DrawAbleObject.cpp.o
+.PHONY : DrawAbleObject.o
+
+# target to build an object file
+DrawAbleObject.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o
+.PHONY : DrawAbleObject.cpp.o
+
+DrawAbleObject.i: DrawAbleObject.cpp.i
+.PHONY : DrawAbleObject.i
+
+# target to preprocess a source file
+DrawAbleObject.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/DrawAbleObject.cpp.i
+.PHONY : DrawAbleObject.cpp.i
+
+DrawAbleObject.s: DrawAbleObject.cpp.s
+.PHONY : DrawAbleObject.s
+
+# target to generate assembly for a file
+DrawAbleObject.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/DrawAbleObject.cpp.s
+.PHONY : DrawAbleObject.cpp.s
 
 Model.o: Model.cpp.o
 .PHONY : Model.o
 
 # target to build an object file
 Model.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Model.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Model.cpp.o
 .PHONY : Model.cpp.o
 
 Model.i: Model.cpp.i
@@ -166,7 +190,7 @@ Model.i: Model.cpp.i
 
 # target to preprocess a source file
 Model.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Model.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Model.cpp.i
 .PHONY : Model.cpp.i
 
 Model.s: Model.cpp.s
@@ -174,15 +198,63 @@ Model.s: Model.cpp.s
 
 # target to generate assembly for a file
 Model.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Model.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Model.cpp.s
 .PHONY : Model.cpp.s
+
+Scene.o: Scene.cpp.o
+.PHONY : Scene.o
+
+# target to build an object file
+Scene.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Scene.cpp.o
+.PHONY : Scene.cpp.o
+
+Scene.i: Scene.cpp.i
+.PHONY : Scene.i
+
+# target to preprocess a source file
+Scene.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Scene.cpp.i
+.PHONY : Scene.cpp.i
+
+Scene.s: Scene.cpp.s
+.PHONY : Scene.s
+
+# target to generate assembly for a file
+Scene.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Scene.cpp.s
+.PHONY : Scene.cpp.s
+
+Shader.o: Shader.cpp.o
+.PHONY : Shader.o
+
+# target to build an object file
+Shader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader.cpp.o
+.PHONY : Shader.cpp.o
+
+Shader.i: Shader.cpp.i
+.PHONY : Shader.i
+
+# target to preprocess a source file
+Shader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader.cpp.i
+.PHONY : Shader.cpp.i
+
+Shader.s: Shader.cpp.s
+.PHONY : Shader.s
+
+# target to generate assembly for a file
+Shader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader.cpp.s
+.PHONY : Shader.cpp.s
 
 Shader_program.o: Shader_program.cpp.o
 .PHONY : Shader_program.o
 
 # target to build an object file
 Shader_program.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shader_program.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader_program.cpp.o
 .PHONY : Shader_program.cpp.o
 
 Shader_program.i: Shader_program.cpp.i
@@ -190,7 +262,7 @@ Shader_program.i: Shader_program.cpp.i
 
 # target to preprocess a source file
 Shader_program.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shader_program.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader_program.cpp.i
 .PHONY : Shader_program.cpp.i
 
 Shader_program.s: Shader_program.cpp.s
@@ -198,39 +270,111 @@ Shader_program.s: Shader_program.cpp.s
 
 # target to generate assembly for a file
 Shader_program.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shader_program.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/Shader_program.cpp.s
 .PHONY : Shader_program.cpp.s
 
-Shape.o: Shape.cpp.o
-.PHONY : Shape.o
+TransformationGroup.o: TransformationGroup.cpp.o
+.PHONY : TransformationGroup.o
 
 # target to build an object file
-Shape.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shape.cpp.o
-.PHONY : Shape.cpp.o
+TransformationGroup.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationGroup.cpp.o
+.PHONY : TransformationGroup.cpp.o
 
-Shape.i: Shape.cpp.i
-.PHONY : Shape.i
+TransformationGroup.i: TransformationGroup.cpp.i
+.PHONY : TransformationGroup.i
 
 # target to preprocess a source file
-Shape.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shape.cpp.i
-.PHONY : Shape.cpp.i
+TransformationGroup.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationGroup.cpp.i
+.PHONY : TransformationGroup.cpp.i
 
-Shape.s: Shape.cpp.s
-.PHONY : Shape.s
+TransformationGroup.s: TransformationGroup.cpp.s
+.PHONY : TransformationGroup.s
 
 # target to generate assembly for a file
-Shape.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/Shape.cpp.s
-.PHONY : Shape.cpp.s
+TransformationGroup.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationGroup.cpp.s
+.PHONY : TransformationGroup.cpp.s
+
+TransformationRotate.o: TransformationRotate.cpp.o
+.PHONY : TransformationRotate.o
+
+# target to build an object file
+TransformationRotate.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationRotate.cpp.o
+.PHONY : TransformationRotate.cpp.o
+
+TransformationRotate.i: TransformationRotate.cpp.i
+.PHONY : TransformationRotate.i
+
+# target to preprocess a source file
+TransformationRotate.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationRotate.cpp.i
+.PHONY : TransformationRotate.cpp.i
+
+TransformationRotate.s: TransformationRotate.cpp.s
+.PHONY : TransformationRotate.s
+
+# target to generate assembly for a file
+TransformationRotate.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationRotate.cpp.s
+.PHONY : TransformationRotate.cpp.s
+
+TransformationScale.o: TransformationScale.cpp.o
+.PHONY : TransformationScale.o
+
+# target to build an object file
+TransformationScale.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationScale.cpp.o
+.PHONY : TransformationScale.cpp.o
+
+TransformationScale.i: TransformationScale.cpp.i
+.PHONY : TransformationScale.i
+
+# target to preprocess a source file
+TransformationScale.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationScale.cpp.i
+.PHONY : TransformationScale.cpp.i
+
+TransformationScale.s: TransformationScale.cpp.s
+.PHONY : TransformationScale.s
+
+# target to generate assembly for a file
+TransformationScale.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationScale.cpp.s
+.PHONY : TransformationScale.cpp.s
+
+TransformationTranslate.o: TransformationTranslate.cpp.o
+.PHONY : TransformationTranslate.o
+
+# target to build an object file
+TransformationTranslate.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationTranslate.cpp.o
+.PHONY : TransformationTranslate.cpp.o
+
+TransformationTranslate.i: TransformationTranslate.cpp.i
+.PHONY : TransformationTranslate.i
+
+# target to preprocess a source file
+TransformationTranslate.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationTranslate.cpp.i
+.PHONY : TransformationTranslate.cpp.i
+
+TransformationTranslate.s: TransformationTranslate.cpp.s
+.PHONY : TransformationTranslate.s
+
+# target to generate assembly for a file
+TransformationTranslate.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/TransformationTranslate.cpp.s
+.PHONY : TransformationTranslate.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -238,7 +382,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -246,7 +390,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Zakladni_Projekt.dir/build.make CMakeFiles/Zakladni_Projekt.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Projekt.dir/build.make CMakeFiles/Projekt.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -257,19 +401,37 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Zakladni_Projekt"
+	@echo "... Projekt"
 	@echo "... Application.o"
 	@echo "... Application.i"
 	@echo "... Application.s"
+	@echo "... DrawAbleObject.o"
+	@echo "... DrawAbleObject.i"
+	@echo "... DrawAbleObject.s"
 	@echo "... Model.o"
 	@echo "... Model.i"
 	@echo "... Model.s"
+	@echo "... Scene.o"
+	@echo "... Scene.i"
+	@echo "... Scene.s"
+	@echo "... Shader.o"
+	@echo "... Shader.i"
+	@echo "... Shader.s"
 	@echo "... Shader_program.o"
 	@echo "... Shader_program.i"
 	@echo "... Shader_program.s"
-	@echo "... Shape.o"
-	@echo "... Shape.i"
-	@echo "... Shape.s"
+	@echo "... TransformationGroup.o"
+	@echo "... TransformationGroup.i"
+	@echo "... TransformationGroup.s"
+	@echo "... TransformationRotate.o"
+	@echo "... TransformationRotate.i"
+	@echo "... TransformationRotate.s"
+	@echo "... TransformationScale.o"
+	@echo "... TransformationScale.i"
+	@echo "... TransformationScale.s"
+	@echo "... TransformationTranslate.o"
+	@echo "... TransformationTranslate.i"
+	@echo "... TransformationTranslate.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

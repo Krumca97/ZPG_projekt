@@ -2,64 +2,82 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cstddef>
 
-ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_shader)
+ShaderProgram::ShaderProgram()
 {
-	//vertex shader
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertex_shader, NULL);
-	glCompileShader(vertexShader);
+	this->shaderProgram_id = glCreateProgram();
+}
 
-	//fragment shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragment_shader, NULL);
-	glCompileShader(fragmentShader);
+ShaderProgram::~ShaderProgram()
+{
+	if(this->shaderProgram_id)
+	{
+		glDeleteProgram(this->shaderProgram_id);
+	}
+}
 
-	//nastarovani shaderu
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, fragmentShader);
-	glAttachShader(shaderProgram, vertexShader);
-	glLinkProgram(shaderProgram);
-
-	//uklid
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+bool ShaderProgram::link(Shader& vertex_shader, Shader& fragment_shader)
+{
+	vertex_shader.compile_shader();
+	fragment_shader.compile_shader();
+	vertex_shader.attachShader(this->shaderProgram_id);
+	fragment_shader.attachShader(this->shaderProgram_id);
+	glLinkProgram(this->shaderProgram_id);
 
 	//kontrola
 	GLint status;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+	glGetProgramiv(this->shaderProgram_id, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
 	{
 		GLint infoLogLength;
-		glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
+		glGetProgramiv(this->shaderProgram_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetProgramInfoLog(shaderProgram, infoLogLength, NULL, strInfoLog);
+		glGetProgramInfoLog(this->shaderProgram_id, infoLogLength, NULL, strInfoLog);
 		fprintf(stderr, "Linker failure: %s\n", strInfoLog);
 		delete[] strInfoLog;
-		exit(EXIT_FAILURE);
+		return false;
 	}
-	
+	return true;
 }
 
-void ShaderProgram::setMat4(const char* name, const glm::mat4& m)
+void ShaderProgram::use_shader_program() 
 {
-	GLint loc = glGetUniformLocation(shaderProgram, name);
-    if (loc != -1)
-	{ 
-		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(m));
-	}
+	glUseProgram(shaderProgram_id);
 }
 
-void ShaderProgram::setVec3(const char* name, const glm::vec3& v)
+void ShaderProgram::setUniform(const char* name, int value)
 {
-    GLint loc = glGetUniformLocation(shaderProgram, name);
-    if (loc != -1)
-	{ 
-		glUniform3fv(loc, 1, glm::value_ptr(v));
+	GLint loc = glGetUniformLocation(this->shaderProgram_id, name);
+    if (loc != -1) 
+	{
+		glUniform1i(loc,value);
 	}
 }
 
-void ShaderProgram::set_shader()
+void ShaderProgram::setUniform(const char* name, float value)
 {
-	glUseProgram(shaderProgram);
+	GLint loc = glGetUniformLocation(this->shaderProgram_id, name);
+    if (loc != -1) 
+	{
+		glUniform1f(loc,value);
+	}
 }
+
+void ShaderProgram::setUniform(const char* name, const glm::vec3& vector)
+{
+	GLint loc = glGetUniformLocation(this->shaderProgram_id, name);
+    if (loc != -1) 
+	{
+		glUniform3fv(loc,1,glm::value_ptr(vector));
+	}
+}
+
+void ShaderProgram::setUniform(const char* name, const glm::mat4& matrix)
+{
+	GLint loc = glGetUniformLocation(this->shaderProgram_id, name);
+    if (loc != -1) 
+	{
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+}
+
 

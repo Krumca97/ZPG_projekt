@@ -1,17 +1,22 @@
 #pragma once
 #include <GL/glew.h>
-#include "Shape.h"
-#include "Shader_program.h"
+#include <vector>
 
-class Model
-{
+class Model {
 public:
-	Model(Shape& shape, ShaderProgram& shader_program);
-
-	void draw();
+	Model(int jump, int positionSize, int color);
+	void load_Data(const std::vector<float>& new_Points);
+	void draw_Model();
 
 private:
-	Shape& shape;
-	ShaderProgram& shader_program;
+	GLuint VAO;
+	GLuint VBO;
 
+	int jump;
+	int positionSize;
+	int color;
+
+	std::vector<float> points;
+
+	void setup_Model();
 };
