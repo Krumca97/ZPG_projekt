@@ -87,7 +87,8 @@ Pokud **`glew32.lib`** , musí být **`glew32.dll`** ve **stejné složce jako .
 #include <GLFW/glfw3.h>
 ...
 ```
-
-
+---
+#Youtube:
+##Cviceni3 -> LAN0229_4(https://youtu.be/_GlQxHSCAbM))
 
 
