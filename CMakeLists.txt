@@ -49,14 +49,14 @@ target_link_libraries(${PROJECT_NAME}
         GLEW::GLEW
 )
 
-#Varovan9 a debugg
+#Varovani a debugg
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 elseif (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /permissive-)
 endif()
 
-# outpu
+# output do /bin
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
