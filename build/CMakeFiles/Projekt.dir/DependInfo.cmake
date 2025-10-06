@@ -8,17 +8,18 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ales/Codding/ZPG/ZPG_projekt/Application.cpp" "CMakeFiles/Projekt.dir/Application.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Application.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/DrawAbleObject.cpp" "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o" "gcc" "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/Model.cpp" "CMakeFiles/Projekt.dir/Model.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Model.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/Scene.cpp" "CMakeFiles/Projekt.dir/Scene.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Scene.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/Shader.cpp" "CMakeFiles/Projekt.dir/Shader.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Shader.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/Shader_program.cpp" "CMakeFiles/Projekt.dir/Shader_program.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Shader_program.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/TransformationGroup.cpp" "CMakeFiles/Projekt.dir/TransformationGroup.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationGroup.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/TransformationRotate.cpp" "CMakeFiles/Projekt.dir/TransformationRotate.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationRotate.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/TransformationScale.cpp" "CMakeFiles/Projekt.dir/TransformationScale.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationScale.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/TransformationTranslate.cpp" "CMakeFiles/Projekt.dir/TransformationTranslate.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationTranslate.cpp.o.d"
-  "/home/ales/Codding/ZPG/ZPG_projekt/main.cpp" "CMakeFiles/Projekt.dir/main.cpp.o" "gcc" "CMakeFiles/Projekt.dir/main.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/Application.cpp" "CMakeFiles/Projekt.dir/Application.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Application.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/DrawAbleObject.cpp" "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o" "gcc" "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/Model.cpp" "CMakeFiles/Projekt.dir/Model.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Model.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/Scene.cpp" "CMakeFiles/Projekt.dir/Scene.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Scene.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/Shader.cpp" "CMakeFiles/Projekt.dir/Shader.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Shader.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/Shader_program.cpp" "CMakeFiles/Projekt.dir/Shader_program.cpp.o" "gcc" "CMakeFiles/Projekt.dir/Shader_program.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/TransformationGroup.cpp" "CMakeFiles/Projekt.dir/TransformationGroup.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationGroup.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/TransformationRotate.cpp" "CMakeFiles/Projekt.dir/TransformationRotate.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationRotate.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/TransformationScale.cpp" "CMakeFiles/Projekt.dir/TransformationScale.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationScale.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/TransformationTranslate.cpp" "CMakeFiles/Projekt.dir/TransformationTranslate.cpp.o" "gcc" "CMakeFiles/Projekt.dir/TransformationTranslate.cpp.o.d"
+  "/home/krumca/Coding/Zpg/ZPG_projekt/main.cpp" "CMakeFiles/Projekt.dir/main.cpp.o" "gcc" "CMakeFiles/Projekt.dir/main.cpp.o.d"
+  "" "bin/Projekt" "gcc" "CMakeFiles/Projekt.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

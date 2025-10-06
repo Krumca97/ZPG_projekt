@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Projekt.dir/link.d"
   "CMakeFiles/Projekt.dir/Application.cpp.o"
   "CMakeFiles/Projekt.dir/Application.cpp.o.d"
   "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o"
