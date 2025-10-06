@@ -2,7 +2,7 @@
 
 ---
 
-Projekt do předmětu ZPG(Základy počítačové grafiky).
+Projekt do předmětu ZPG (Základy počítačové grafiky).
 
 Vytvořil: Aleš Laník, LAN0229.
 
