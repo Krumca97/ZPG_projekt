@@ -88,6 +88,22 @@ Pokud **`glew32.lib`** , musí být **`glew32.dll`** ve **stejné složce jako .
 ...
 ```
 
+# Youtube:
+
+## Cviceni 3 
 
 
+- LAN0229_4(https://youtu.be/_GlQxHSCAbM)
+
+
+- LAN0229_5(https://youtu.be/yXgwH0y_bHk)
+
+
+- LAN0229_7(https://youtu.be/HzpkxTpNBss)
+
+## Cviceni 4
+
+- LAN0229_1 (https://youtu.be/6ITZitkA63s)
+
+- LAN0229_3 (https://youtu.be/pwPT7a5Sz7w)
 
