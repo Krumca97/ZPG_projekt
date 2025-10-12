@@ -18,6 +18,8 @@ public:
 	void setUniform(const char* name,float value);
 	void setUniform(const char* name,const glm::mat4& matrix);
 	void setUniform(const char* name,const glm::vec3& vector);
+
+	void update(glm::mat4 view, glm::mat4 proj);
 private:
 	GLuint shaderProgram_id;
 };

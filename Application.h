@@ -1,7 +1,7 @@
 #pragma once
 //Include GLEW
-#include <GL/glew.h>
-#include <GLFW/glfw3.h> 
+// #include <GL/glew.h>
+// #include <GLFW/glfw3.h> 
 
 //Include GLM  
 #include <glm/vec3.hpp> // glm::vec3
@@ -17,6 +17,8 @@
 #include "DrawAbleObject.h"
 #include "Shader_program.h"
 #include "Scene.h"
+#include "Camera.h"
+#include "Controller.h"
 
 //structura pro vytvoreni 20 objektu
 struct ObjectGroup 
@@ -42,6 +44,10 @@ public:
 private:
 
 	GLFWwindow* window = nullptr;
+
+	//Kamera
+	Camera* camera = nullptr;
+	Controller* controller = nullptr;
 
 	//fialovy trojuhelnik
 	Shader* vertexShaderTrinagle = nullptr;
@@ -74,11 +80,15 @@ private:
 	ShaderProgram* shaderUniverzal = nullptr;
 	Model* modelUniverzal = nullptr;
 
+	//scena5
+	std::vector<ObjectGroup*> groupForScene5;
+
 	//Scena
 	Scene* scene1 = nullptr;
 	Scene* scene2 = nullptr;
 	Scene* scene3 = nullptr;
 	Scene* scene4 = nullptr;
+	Scene* scene5 = nullptr;
 	Scene* sceneActual = scene1;	
 
 	static void error_callback(int error, const char* description);

@@ -1,7 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Projekt.dir/link.d"
   "CMakeFiles/Projekt.dir/Application.cpp.o"
   "CMakeFiles/Projekt.dir/Application.cpp.o.d"
+  "CMakeFiles/Projekt.dir/Camera.cpp.o"
+  "CMakeFiles/Projekt.dir/Camera.cpp.o.d"
+  "CMakeFiles/Projekt.dir/Controller.cpp.o"
+  "CMakeFiles/Projekt.dir/Controller.cpp.o.d"
   "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o"
   "CMakeFiles/Projekt.dir/DrawAbleObject.cpp.o.d"
   "CMakeFiles/Projekt.dir/Model.cpp.o"

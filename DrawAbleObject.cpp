@@ -49,10 +49,7 @@ glm::mat4 DrawAbleObject::combiMatrix()
 void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
 {
 	glm::mat4 matrix = combiMatrix();
-	glm::mat4 MVP = proj* view * matrix;
-
 	shader_program.use_shader_program();
-	shader_program.setUniform("u_MVP",MVP);
-	shader_program.setUniform("u_Model", matrix);
-	model.draw_Model();
+    shader_program.setUniform("modelMatrix", matrix);
+    model.draw_Model();
 }

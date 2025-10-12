@@ -6,12 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the build type." FORCE)
-endif()
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 # Zdrojáky projektu 
 set(SOURCES
     main.cpp
@@ -26,6 +20,8 @@ set(SOURCES
     TransformationScale.cpp
     TransformationTranslate.cpp
     TransformationGroup.cpp
+    Camera.cpp
+    Controller.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

@@ -107,12 +107,14 @@ const char* vertex_shader_univerzal =
 "#version 330\n"
 "layout(location = 0) in vec3 aPos;"
 "layout(location = 1) in vec3 aNormal;"
-"uniform mat4 u_MVP;"
-"uniform mat4 u_Model;"
+"uniform mat4 modelMatrix;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
 "out vec3 color;"
 "void main() {"
-"    gl_Position = u_MVP * vec4(aPos, 1.0);"
-"    color = normalize(aNormal)*0.5 + 0.5;"
+"    mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;"
+"    gl_Position = MVP * vec4(aPos, 1.0);"
+"    color = normalize(aNormal) * 0.5 + 0.5;"
 "}";
 
 //fragment shader trojuhelnik
@@ -134,10 +136,10 @@ const char* fragment_shader_square =
 //fragment shader kulicky
 const char* fragment_shader_univerzal =
 "#version 330\n"
-"in vec3 color;\n"
-"out vec4 fragColor;\n"
-"void main() {\n"
-"    fragColor = vec4(color, 1.0);\n"
+"in vec3 color;"
+"out vec4 fragColor;"
+"void main() {"
+"    fragColor = vec4(color, 1.0);"
 "}";
 
 //fragment shader obdelnik
@@ -219,6 +221,11 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 	{
 		sceneNow = 4;
 	}
+
+	if(key == GLFW_KEY_5 && action == GLFW_PRESS)
+	{
+		sceneNow = 5;
+	}
 }
 
 void Application::window_focus_callback(GLFWwindow* window, int focused)
@@ -263,8 +270,17 @@ bool Application::initialization()
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+	window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, NULL);
 	if (!window) {
+		fprintf(stderr, "ERROR: glfwCreateWindow failed!\n");
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
@@ -293,14 +309,48 @@ bool Application::initialization()
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 
+	camera = new Camera(glm::vec3(0.f, 1.7f, 3.f),glm::quat(1.f, 0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f),60.f, ratio,0.1f, 100.f,2.5f, 0.1f);
+	controller = new Controller(camera);
+
+	glfwSetWindowUserPointer(window, controller);
+	glfwSetCursorPosCallback(window, [](GLFWwindow* win, double x, double y) 
+	{
+		Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(win));
+		if (ctrl) 
+		{
+			ctrl->process_mouse(win, x, y);
+		}
+	});
+
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* win, int button, int action, int mods) 
+	{
+		Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(win));
+		if (!ctrl) 
+		{
+			return;
+		}
+		if (button == GLFW_MOUSE_BUTTON_RIGHT) 
+		{
+			ctrl->set_mouse_enabled(action == GLFW_PRESS);
+			if (action == GLFW_PRESS)
+			{
+				glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			}
+			else
+			{
+				glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			}
+		}
+	});
+
 	return true;
 }
 
 void Application::createShaders()
 {
 	//shadery pro fialovy trojuhelnik
-	vertexShaderTrinagle = new Shader(vertex_shader,GL_VERTEX_SHADER);
-	fragmentShaderTriangle = new Shader(fragment_shader_triangle,GL_FRAGMENT_SHADER);
+	vertexShaderTrinagle = new Shader(vertex_shader_univerzal,GL_VERTEX_SHADER);
+	fragmentShaderTriangle = new Shader(fragment_shader_univerzal,GL_FRAGMENT_SHADER);
 	shaderTriangle = new ShaderProgram();
 	shaderTriangle->link(*vertexShaderTrinagle,*fragmentShaderTriangle);
 
@@ -316,13 +366,18 @@ void Application::createShaders()
 	shaderSphere = new ShaderProgram();
 	shaderSphere->link(*vertexShaderSphere,*fragmentShaderSphere);
 
-	//univerzalni shader pro 20 objektu
+	//univerzalni shader
 	vertexShaderUniverzal = new Shader(vertex_shader_univerzal,GL_VERTEX_SHADER);
     fragmentShaderUniverzal = new Shader(fragment_shader_univerzal,GL_FRAGMENT_SHADER);
     shaderUniverzal = new ShaderProgram();
     shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
 
-	
+	camera->attach(shaderTriangle);
+	camera->attach(shaderRectangle);
+	camera->attach(shaderSphere);
+	camera->attach(shaderUniverzal);
+
+	camera->notify();
 }
 void Application::createBuffers()
 {
@@ -349,24 +404,30 @@ void Application::createBuffers()
 	object4Sphere = new DrawAbleObject(*modelSphere,*shaderSphere);
 
 	//Scena 4 
-    groupForScene4.push_back(makeGroupFrom("Bush",shaderUniverzal,bushes,sizeof(bushes)/sizeof(float),3));
-    groupForScene4.push_back(makeGroupFrom("Tree",shaderUniverzal,tree,sizeof(tree)/sizeof(float),3));
-    groupForScene4.push_back(makeGroupFrom("SuziSmooth",shaderUniverzal,suziSmooth,sizeof(suziSmooth)/sizeof(float),3));
-    groupForScene4.push_back(makeGroupFrom("SuziFlat",shaderUniverzal,suziFlat,sizeof(suziFlat)/sizeof(float),3));
-    groupForScene4.push_back(makeGroupFrom("Plain",shaderUniverzal,plain,sizeof(plain)/sizeof(float),3));
-    groupForScene4.push_back(makeGroupFrom("Gift",shaderUniverzal,gift,sizeof(gift)/sizeof(float),3));
-	groupForScene4.push_back(makeGroupFrom("Sphere",shaderUniverzal,sphere,sizeof(sphere)/sizeof(float),2));
+    groupForScene4.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 3));
+    groupForScene4.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 3));
+    groupForScene4.push_back(makeGroupFrom("SuziSmooth", shaderUniverzal, suziSmooth, sizeof(suziSmooth)/sizeof(float), 3));
+    groupForScene4.push_back(makeGroupFrom("SuziFlat", shaderUniverzal, suziFlat, sizeof(suziFlat)/sizeof(float), 3));
+    groupForScene4.push_back(makeGroupFrom("Plain", shaderUniverzal, plain, sizeof(plain)/sizeof(float), 3));
+    groupForScene4.push_back(makeGroupFrom("Gift", shaderUniverzal, gift, sizeof(gift)/sizeof(float), 3));
+	groupForScene4.push_back(makeGroupFrom("Sphere", shaderUniverzal, sphere, sizeof(sphere)/sizeof(float), 2));
+
+	//scena5
+	groupForScene5.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 70));
+	groupForScene5.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 80));
+
 }
 
 void Application::buildScene()
 {
-	glm::mat4 proj = glm::perspective(glm::radians(60.0f),ratio,0.1f,100.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0f), {0,0,-2.5f});
+	glm::mat4 proj = camera->projectionMatrix();
+	glm::mat4 view = camera->getCamera();
 
 	scene1 = new Scene(view,proj);
 	scene2 = new Scene(view,proj);
 	scene3 = new Scene(view,proj);
 	scene4 = new Scene(view,proj);
+	scene5 = new Scene(view,proj);
 
 	//barevny trojuhelnik
 	TransformationGroup* groupTriangle = new TransformationGroup();
@@ -451,6 +512,70 @@ void Application::buildScene()
 		}
 	}
 
+	//podlaha pro scenu 5
+	{
+        ObjectGroup* ground = makeGroupFrom("Ground", shaderUniverzal, plain, sizeof(plain)/sizeof(float), 1);
+        TransformationGroup* froundGroup = new TransformationGroup();
+        froundGroup->addTransformation(new TransformationTranslate(glm::vec3(0.0f, -0.01f, 0.0f), 0.0f));
+        froundGroup->addTransformation(new TransformationScale(glm::vec3(60.0f, 1.0f, 60.0f), 0.0f));
+        ground->objects[0]->addTransformation(froundGroup);
+        scene5->addObject(ground->objects[0]);
+    }
+
+
+	//vytvoreni lesa scena 5
+    const float area_half   = 25.0f;      
+    const glm::vec2 center   = glm::vec2(0.0f);
+    const float start_radius  = 2.5f;       // volný prostor kolem startu
+    const float ground_y      = 0.0f;
+
+    std::srand((unsigned)std::time(nullptr));
+
+    for (ObjectGroup* group : groupForScene5)
+    {
+        for (DrawAbleObject* obj : group->objects)
+        {
+            float x; 
+			float z;
+			bool is_valid = false;
+			while (!is_valid)
+			{
+				x = -area_half + (2.0f * area_half) * (std::rand() / (float)RAND_MAX);
+				z = -area_half + (2.0f * area_half) * (std::rand() / (float)RAND_MAX);
+
+				float distance = glm::length(glm::vec2(x, z) - center);
+				if(distance >= start_radius)
+				{
+					is_valid = true;
+				}
+				else
+				{
+					is_valid = false;
+				}
+			}
+
+            float min_size = 0.6f;
+			float max_size = 1.4f;      
+            if (group->name == "Bush") 
+			{ 
+				min_size = 0.3f; 
+				max_size = 0.8f; 
+			}
+            float size = min_size + (max_size - min_size) * (std::rand() / (float)RAND_MAX);
+
+
+            float reandom_angle = -180.f + 360.f * (std::rand() / (float)RAND_MAX);
+            float angle_in_radians = glm::radians(reandom_angle);
+
+            TransformationGroup* transGroup5 = new TransformationGroup();
+            transGroup5->addTransformation(new TransformationTranslate(glm::vec3(x, ground_y, z), 0.0f));
+            transGroup5->addTransformation(new TransformationRotate(glm::vec3(0,1,0), reandom_angle, 0.0f));
+            transGroup5->addTransformation(new TransformationScale(glm::vec3(size), 0.0f));
+            obj->addTransformation(transGroup5);
+
+            scene5->addObject(obj);
+        }
+    }
 }
 
 float angle= 0.0f;
@@ -486,10 +611,22 @@ void Application::run()
 				printf("Scene4");
 				sceneActual = scene4;
 				break;
+			case 5:
+				printf("Scene5");
+				sceneActual = scene5;
+				break;
 			}
 			//sceneActual->reset();
 			lastScene = sceneNow;
 		}
+
+		controller->process_keyboard(window, deltaTime);
+
+		glm::mat4 view = camera->getCamera();
+		glm::mat4 proj = camera->projectionMatrix();
+		
+		sceneActual->setView(view);
+		sceneActual->setProjection(proj);
 		sceneActual->updateScene(deltaTime);
 		sceneActual->drawScene();
 

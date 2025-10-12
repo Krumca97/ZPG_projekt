@@ -1,4 +1,5 @@
 #include "Shader_program.h"
+#include "DrawAbleObject.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <cstddef>
 
@@ -78,6 +79,14 @@ void ShaderProgram::setUniform(const char* name, const glm::mat4& matrix)
 	{
 		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
+}
+
+
+void ShaderProgram::update(glm::mat4 view, glm::mat4 proj)
+{
+	use_shader_program();
+	setUniform("viewMatrix",view);
+	setUniform("projectionMatrix",proj);
 }
 
 
