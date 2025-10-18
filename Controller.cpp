@@ -1,75 +1,80 @@
 #include "Controller.h"
 #include <iostream>
 
-Controller::Controller(Camera* camera)
+Controller::Controller(CameraSubject* camera)
 {
     this->camera = camera;
     this->lastX= 0.f;
     this->lastY = 0.f;
-    this->first_mouse = true;
-    this->mouse_enabled = true;
+    this->firstMouse = true;
+    this->mouseEnabled = true;
 }
 
-void Controller::process_keyboard(GLFWwindow* window, float deltaTime)
+void Controller::processKeyboard(GLFWwindow* window, float deltaTime)
 {
-    float velocity = camera->get_camera_speed() * deltaTime*2;
+    float velocity = camera->getCameraSpeed() * deltaTime*2;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        camera->move_forward(velocity);
+        camera->moveForward(velocity);
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
-        camera->move_backward(velocity);
+        camera->moveBackward(velocity);
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {    
-        camera->move_left(velocity);
+        camera->moveLeft(velocity);
     }
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {    
-        camera->move_right(velocity);
+        camera->moveRight(velocity);
     }
 }
 
-void Controller::process_mouse(GLFWwindow* window, float x_pos, float y_pos)
+void Controller::processMouse(GLFWwindow* window, float xPos, float yPos)
 {
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     {
-        if (!mouse_enabled) 
+        if (!mouseEnabled) 
         {
-            mouse_enabled = true;
-            first_mouse = true;  
+            mouseEnabled = true;
+            firstMouse = true;  
         }
     } 
     else 
     {
-        mouse_enabled = false;
+        mouseEnabled = false;
         return;
     }
 
-    if (first_mouse) 
+    if (firstMouse) 
     {
-        lastX = x_pos;
-        lastY = y_pos;
-        first_mouse = false;
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = false;
     }
 
-    float xoffset = x_pos - lastX;
-    float yoffset = lastY - y_pos; 
+    float xOffset = xPos - lastX;
+    float yOffset = lastY - yPos; 
 
-    lastX = x_pos;
-    lastY = y_pos;
+    lastX = xPos;
+    lastY = yPos;
 
-    camera->mouse_delta_movement(yoffset, -xoffset);
+    camera->mouseDeltaMovement(yOffset, -xOffset);
 }
 
-void Controller::set_mouse_enabled(bool enabled)
+void Controller::setMouseEnabled(bool enabled)
 {
-    mouse_enabled = enabled;
-    first_mouse = true; 
+    mouseEnabled = enabled;
+    firstMouse = true; 
+}
+
+CameraSubject* Controller:: getCamera()
+{
+    return this->camera;
 }

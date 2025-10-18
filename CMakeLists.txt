@@ -15,13 +15,14 @@ set(SOURCES
     Shader.cpp
     Model.cpp
     Scene.cpp
-    Transformation.h
+    TransformationComponent.h
     TransformationRotate.cpp
     TransformationScale.cpp
     TransformationTranslate.cpp
-    TransformationGroup.cpp
-    Camera.cpp
+    TransformationComposite.cpp
+    CameraSubject.cpp
     Controller.cpp
+    LightSubject.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

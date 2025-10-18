@@ -1,20 +1,22 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include "Camera.h"
+#include "CameraSubject.h"
 
 class Controller {
 public:
-    Controller(Camera* camera);
+    Controller(CameraSubject* camera);
 
-    void process_keyboard(GLFWwindow* window, float deltaTime);
-    void process_mouse(GLFWwindow* window, float x_pos, float y_pos);
+    void processKeyboard(GLFWwindow* window, float deltaTime);
+    void processMouse(GLFWwindow* window, float x_pos, float y_pos);
 
-    void set_mouse_enabled(bool enabled);
+    void setMouseEnabled(bool enabled);
+
+     CameraSubject* getCamera();
 
 private:
-    Camera* camera;
+    CameraSubject* camera;
     float lastX;
     float lastY;
-    bool first_mouse;
-    bool mouse_enabled;
+    bool firstMouse;
+    bool mouseEnabled;
 };

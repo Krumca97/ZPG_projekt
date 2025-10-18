@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include "TransformationRotate.h"
 
 TransformationRotate::TransformationRotate(glm::vec3 axis, float angle,float speed)
@@ -7,12 +8,17 @@ TransformationRotate::TransformationRotate(glm::vec3 axis, float angle,float spe
     this->speed = speed;
 };
 
-void TransformationRotate::update(float deltaTime)
-{
-    this->angle += this->speed *deltaTime;
-}
 
 glm::mat4 TransformationRotate::getMatrix() const
 {
-    return glm::rotate(glm::mat4(1.0f),angle,axis);
+   if (speed == 0.0f)
+    {
+        return glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis);
+    }
+    else
+    {
+        float time = glfwGetTime();
+        float currentAngle = angle + speed * time;
+        return glm::rotate(glm::mat4(1.0f), glm::radians(currentAngle), axis);
+    }
 }

@@ -17,14 +17,15 @@
 #include "DrawAbleObject.h"
 #include "Shader_program.h"
 #include "Scene.h"
-#include "Camera.h"
+#include "CameraSubject.h"
 #include "Controller.h"
+#include "LightSubject.h"
 
 //structura pro vytvoreni 20 objektu
 struct ObjectGroup 
 {
-    Shader* vertex_shader;
-	Shader* fragment_shader;
+    Shader* vertexShader;
+	Shader* fragmentShader;
     ShaderProgram* shader;
     Model* model;
     std::vector<DrawAbleObject*> objects;
@@ -46,8 +47,11 @@ private:
 	GLFWwindow* window = nullptr;
 
 	//Kamera
-	Camera* camera = nullptr;
+	CameraSubject* camera = nullptr;
 	Controller* controller = nullptr;
+
+	//Svetlo
+	LightSubject* light = nullptr;
 
 	//fialovy trojuhelnik
 	Shader* vertexShaderTrinagle = nullptr;
@@ -64,24 +68,48 @@ private:
 	DrawAbleObject* objectRectangle = nullptr;
 
 	//Kulicky
-	Shader* vertexShaderSphere = nullptr;
-	Shader* fragmentShaderSphere = nullptr;
-	ShaderProgram* shaderSphere = nullptr;
+	Shader* vertexShaderSphere1 = nullptr;
+	Shader* fragmentShaderSphere1 = nullptr;
+	ShaderProgram* shaderSphere1 = nullptr;
+	Shader* vertexShaderSphere2 = nullptr;
+	Shader* fragmentShaderSphere2 = nullptr;
+	ShaderProgram* shaderSphere2 = nullptr;
+	Shader* vertexShaderSphere3 = nullptr;
+	Shader* fragmentShaderSphere3 = nullptr;
+	ShaderProgram* shaderSphere3 = nullptr;
+	Shader* vertexShaderSphere4 = nullptr;
+	Shader* fragmentShaderSphere4 = nullptr;
+	ShaderProgram* shaderSphere4 = nullptr;
 	Model* modelSphere = nullptr;
 	DrawAbleObject* object1Sphere = nullptr;
 	DrawAbleObject* object2Sphere = nullptr;
 	DrawAbleObject* object3Sphere = nullptr;
 	DrawAbleObject* object4Sphere = nullptr;
 
-	//Scena 4 -> 20 modelu
+	//Scena univerzal
 	std::vector<ObjectGroup*> groupForScene4;
 	Shader* vertexShaderUniverzal = nullptr;
 	Shader* fragmentShaderUniverzal = nullptr;
 	ShaderProgram* shaderUniverzal = nullptr;
 	Model* modelUniverzal = nullptr;
 
-	//scena5
-	std::vector<ObjectGroup*> groupForScene5;
+	//scena3
+	std::vector<ObjectGroup*> groupForScene3;
+
+	//Slunecni soustava
+	Shader* vertexShaderSun = nullptr;
+	Shader* fragmentShaderSun = nullptr;
+	ShaderProgram* shaderSun = nullptr;
+	Shader* vertexShaderEarth = nullptr;
+	Shader* fragmentShaderEarth = nullptr;
+	ShaderProgram* shaderEarth = nullptr;  
+	Shader* vertexShaderMoon = nullptr;
+	Shader* fragmentShaderMoon = nullptr;
+	ShaderProgram* shaderMoon = nullptr;
+	Model* modelSolarSystem = nullptr;
+	DrawAbleObject* objectSun = nullptr;
+	DrawAbleObject* objectEarth = nullptr;
+	DrawAbleObject* objectMoon = nullptr; 
 
 	//Scena
 	Scene* scene1 = nullptr;

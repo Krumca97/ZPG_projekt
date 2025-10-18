@@ -5,8 +5,8 @@
 class Model {
 public:
 	Model(int jump, int positionSize, int color);
-	void load_Data(const std::vector<float>& new_Points);
-	void draw_Model();
+	void loadData(const std::vector<float>& newPoints);
+	void drawModel();
 
 private:
 	GLuint VAO;
@@ -18,5 +18,5 @@ private:
 
 	std::vector<float> points;
 
-	void setup_Model();
+	void setupModel();
 };

@@ -4,15 +4,17 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include "Shader.h"
+#include "IObserverCamera.h"
+#include "IObserverLight.h"
 
-class ShaderProgram
+class ShaderProgram : public IObserverCamera, public IObserverLight
 {
 public:
 	ShaderProgram();
 	~ShaderProgram();
 
 	bool link(Shader& vertex_shader, Shader& fragment_shader);
-	void use_shader_program();
+	void useShaderProgram();
 
 	void setUniform(const char* name,int value);
 	void setUniform(const char* name,float value);
@@ -20,7 +22,11 @@ public:
 	void setUniform(const char* name,const glm::vec3& vector);
 
 	void update(glm::mat4 view, glm::mat4 proj);
+
+	void onCameraChange(glm::mat4 view,glm::mat4 proj,glm::vec3 cameraPos) override;
+	void onLightChange(glm::vec3 position, glm::vec3 color, float intensity) override;
+	void setObjectColor(glm::vec3 color) override;
 private:
-	GLuint shaderProgram_id;
+	GLuint shaderProgramId;
 };
 

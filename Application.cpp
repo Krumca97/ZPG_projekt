@@ -6,11 +6,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Scene.h"
-#include "Transformation.h"
+#include "TransformationComponent.h"
 #include "TransformationRotate.h"
 #include "TransformationScale.h"
 #include "TransformationTranslate.h"
-#include "TransformationGroup.h"
+#include "TransformationComposite.h"
 #include <ctime>
 #include <iostream>
 
@@ -21,154 +21,13 @@
 #include "Models/suzi_flat.h"
 #include "Models/suzi_smooth.h"
 #include "Models/tree.h"
-
-//trojuhelnik
-float points_triangle[] = 
-{
-	0.0f, 0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-   -0.5f, -0.5f, 0.0f
-};
-
-//ctverec
-float points_square[] = 
-{
-	-0.95f, -0.95f, 0.0f,
-	-0.95f, -0.75f, 0.0f,
-	-0.75f, -0.95f, 0.0f,
-
-	-0.75f, -0.95f, 0.0f,
-	-0.95f, -0.75f, 0.0f,
-	-0.75f, -0.75f, 0.0f
-};
-
-//ctverec 
-float points_rectangle[] =
-{
-	0.0f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  
-	-0.5f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-	0.5f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-
-	-0.5f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-	0.5f, 0.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-	0.0f, -0.5f, 0.0f,   1.0f, 1.0f, 0.0f
-};
-
-
-//vertex shader
-const char* vertex_shader =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"uniform mat4 u_MVP;"
-"void main () {"
-"     gl_Position = u_MVP * vec4 (vp, 1.0);"
-"}";
-
-//vertex shader obdelnik
-const char* vertex_shader_rectangle =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"layout(location=1) in vec3 vc;"
-"out vec3 color;"
-"void main () {"
-"     gl_Position = vec4 (vp, 1.0);"
-"	  color = vc;"
-"}";
-
-//vertex shader bush
-const char* vertex_shader_bush =
-"#version 330\n"
-"layout(location = 0) in vec3 aPos;"
-"layout(location = 1) in vec3 aNormal;"
-"uniform mat4 u_MVP;"
-"uniform mat4 u_Model;"
-"out vec3 Normal;"
-"out vec3 FragPos;"
-"void main() {"
-"    FragPos = vec3(u_Model * vec4(aPos, 1.0));"
-"    Normal = mat3(transpose(inverse(u_Model))) * aNormal;"
-"    gl_Position = u_MVP * vec4(aPos, 1.0);"
-"}";
-
-//tocici ctverec
-const char* vertex_shader_rectangle_rotate =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"layout(location=1) in vec3 vc;"
-"out vec3 color;"
-"uniform mat4 u_MVP;"
-"void main () {"
-"     gl_Position = u_MVP * vec4(vp, 1.0);"
-"     color = vc;"
-"}";
-
-//kulicky
-const char* vertex_shader_univerzal =
-"#version 330\n"
-"layout(location = 0) in vec3 aPos;"
-"layout(location = 1) in vec3 aNormal;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec3 color;"
-"void main() {"
-"    mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;"
-"    gl_Position = MVP * vec4(aPos, 1.0);"
-"    color = normalize(aNormal) * 0.5 + 0.5;"
-"}";
-
-//fragment shader trojuhelnik
-const char* fragment_shader_triangle =
-"#version 330\n"
-"out vec4 fragColor;"
-"void main () {"
-"     fragColor = vec4 (0.5, 0.0, 0.5, 1.0);"
-"}";
-
-//fragment shader ctverec
-const char* fragment_shader_square =
-"#version 330\n"
-"out vec4 fragColor;"
-"void main () {"
-"     fragColor = vec4 (1.0, 1.0, 0.0, 1.0);"
-"}";
-
-//fragment shader kulicky
-const char* fragment_shader_univerzal =
-"#version 330\n"
-"in vec3 color;"
-"out vec4 fragColor;"
-"void main() {"
-"    fragColor = vec4(color, 1.0);"
-"}";
-
-//fragment shader obdelnik
-const char* fragment_shader_rectangle =
-"#version 330\n"
-"in vec3 color;\n"
-"out vec4 fragColor;\n"
-"void main() {\n"
-"    fragColor = vec4(color, 1.0);\n"
-"}";
-
-//fragment shader bush
-const char* fragment_shader_bush =
-"#version 330\n"
-"in vec3 Normal;"
-"in vec3 FragPos;"
-"out vec4 FragColor;"
-"const vec3 lightDir = vec3(-0.5, -1.0, -0.3);"
-"void main() {"
-"    float diff = max(dot(normalize(Normal), -lightDir), 0.0);"
-"    vec3 color = vec3(0.2, 0.8, 0.2) * diff;"
-"    FragColor = vec4(color, 1.0);"
-"}";
-
+#include "Models/triangle.h"
 
 
 int directory = 1;
 float ratio;
 int sceneNow = 1;
+int fullScreen = 0;
 
 static ObjectGroup* makeGroupFrom(std::string name,ShaderProgram* shader,const float* data,int vertecies,int instances)
 {
@@ -177,7 +36,7 @@ static ObjectGroup* makeGroupFrom(std::string name,ShaderProgram* shader,const f
     object->shader = shader;              
 	object->model  = new Model(6,3,3);
     std::vector<float>modelsForScene4(data, data + vertecies);
-    object->model->load_Data(modelsForScene4);
+    object->model->loadData(modelsForScene4);
 
     for (int i = 0; i < instances; i++) {
         object->objects.push_back(new DrawAbleObject(*object->model, *object->shader));
@@ -221,11 +80,28 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 	{
 		sceneNow = 4;
 	}
-
-	if(key == GLFW_KEY_5 && action == GLFW_PRESS)
+	if(key == GLFW_KEY_F && action == GLFW_PRESS )
 	{
-		sceneNow = 5;
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		if (!fullScreen)
+		{
+			glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+			fullScreen = 1;
+		}
+		else
+		{
+			int windowedWidth = 1280;
+			int windowedHeight = 720;
+			int xpos = (mode->width - windowedWidth) / 2;
+			int ypos = (mode->height - windowedHeight) / 2;
+
+			glfwSetWindowMonitor(window, NULL, xpos, ypos, windowedWidth, windowedHeight, 0);
+			fullScreen = 0;
+		}
 	}
+
 }
 
 void Application::window_focus_callback(GLFWwindow* window, int focused)
@@ -240,8 +116,17 @@ void Application::window_iconify_callback(GLFWwindow* window, int iconified)
 
 void Application::window_size_callback(GLFWwindow* window, int width, int height) 
 {
-	printf("resize %d, %d \n", width, height);
-	glViewport(0, 0, width, height);
+    printf("resize %d, %d \n", width, height);
+    glViewport(0, 0, width, height);
+
+    ratio = static_cast<float>(width) / static_cast<float>(height);
+
+    Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(window));
+    if (ctrl && ctrl->getCamera())
+    {
+        ctrl->getCamera()->setWindowRatio(ratio);
+        ctrl->getCamera()->notify();
+    }
 }
 
 void Application::cursor_callback(GLFWwindow* window, double x, double y)
@@ -278,12 +163,21 @@ bool Application::initialization()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-	window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, NULL);
-	if (!window) {
-		fprintf(stderr, "ERROR: glfwCreateWindow failed!\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+    int width1 = 1280;
+	int height1 = 720;
+
+    if (fullScreen) 
+	{
+        window = glfwCreateWindow(mode->width, mode->height, "ZPG", monitor, NULL);
+		glfwSetWindowSizeCallback(window, window_size_callback);
+
+    } 
+	else 
+	{
+        window = glfwCreateWindow(width1, height1, "ZPG", NULL, NULL);
+		glfwSetWindowSizeCallback(window, window_size_callback);
+
+    }
 
 
 	glfwMakeContextCurrent(window);
@@ -304,12 +198,12 @@ bool Application::initialization()
 	glfwGetVersion(&major, &minor, &revision);
 	printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-	ratio = width / (float)height;
-	glViewport(0, 0, width, height);
+	// int width, height;
+	// glfwGetFramebufferSize(window, &width, &height);
+	// ratio = width / (float)height;
+	// glViewport(0, 0, width, height);
 
-	camera = new Camera(glm::vec3(0.f, 1.7f, 3.f),glm::quat(1.f, 0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f),60.f, ratio,0.1f, 100.f,2.5f, 0.1f);
+	camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f),glm::quat(1.f, 0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f),60.f, ratio,0.1f, 100.f,2.5f, 0.1f);
 	controller = new Controller(camera);
 
 	glfwSetWindowUserPointer(window, controller);
@@ -318,7 +212,7 @@ bool Application::initialization()
 		Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(win));
 		if (ctrl) 
 		{
-			ctrl->process_mouse(win, x, y);
+			ctrl->processMouse(win, x, y);
 		}
 	});
 
@@ -331,7 +225,7 @@ bool Application::initialization()
 		}
 		if (button == GLFW_MOUSE_BUTTON_RIGHT) 
 		{
-			ctrl->set_mouse_enabled(action == GLFW_PRESS);
+			ctrl->setMouseEnabled(action == GLFW_PRESS);
 			if (action == GLFW_PRESS)
 			{
 				glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -343,79 +237,129 @@ bool Application::initialization()
 		}
 	});
 
+	light = new LightSubject(
+		glm::vec3(0.f,0.f,0.f),
+		glm::vec3(0.7f,0.8f,1.f),
+		1.f
+	);
+
 	return true;
 }
 
 void Application::createShaders()
 {
 	//shadery pro fialovy trojuhelnik
-	vertexShaderTrinagle = new Shader(vertex_shader_univerzal,GL_VERTEX_SHADER);
-	fragmentShaderTriangle = new Shader(fragment_shader_univerzal,GL_FRAGMENT_SHADER);
+	vertexShaderTrinagle = new Shader("../../Shaders/TriangleVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderTriangle = new Shader("../../Shaders/TriangleFragmentShader.frag",GL_FRAGMENT_SHADER);
 	shaderTriangle = new ShaderProgram();
 	shaderTriangle->link(*vertexShaderTrinagle,*fragmentShaderTriangle);
-
-	//shadery pro barevny ctverec
-	vertexShaderRectangle = new Shader(vertex_shader_rectangle_rotate,GL_VERTEX_SHADER);
-	fragmentShaderRectangle = new Shader(fragment_shader_rectangle, GL_FRAGMENT_SHADER);
-	shaderRectangle = new ShaderProgram();
-	shaderRectangle->link(*vertexShaderRectangle, *fragmentShaderRectangle);
+	shaderTriangle->setObjectColor(glm::vec3(1.f,0.f,1.f));
 
 	//shadery pro kulicky
-	vertexShaderSphere = new Shader(vertex_shader_univerzal,GL_VERTEX_SHADER);
-	fragmentShaderSphere = new Shader(fragment_shader_univerzal,GL_FRAGMENT_SHADER);
-	shaderSphere = new ShaderProgram();
-	shaderSphere->link(*vertexShaderSphere,*fragmentShaderSphere);
+	vertexShaderSphere1 = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere1 = new Shader("../../Shaders/ConstantFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSphere1 = new ShaderProgram();
+	shaderSphere1->link(*vertexShaderSphere1,*fragmentShaderSphere1);
+	shaderSphere1->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
+
+	vertexShaderSphere2 = new Shader("../../Shaders/LambertVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere2 = new Shader("../../Shaders/LambertFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSphere2 = new ShaderProgram();
+	shaderSphere2->link(*vertexShaderSphere2,*fragmentShaderSphere2);
+	shaderSphere2->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
+
+	vertexShaderSphere3 = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere3 = new Shader("../../Shaders/PhongFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSphere3 = new ShaderProgram();
+	shaderSphere3->link(*vertexShaderSphere3,*fragmentShaderSphere3);
+	shaderSphere3->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
+
+	vertexShaderSphere4 = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere4 = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSphere4 = new ShaderProgram();
+	shaderSphere4->link(*vertexShaderSphere4,*fragmentShaderSphere4);
+	shaderSphere4->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
 
 	//univerzalni shader
-	vertexShaderUniverzal = new Shader(vertex_shader_univerzal,GL_VERTEX_SHADER);
-    fragmentShaderUniverzal = new Shader(fragment_shader_univerzal,GL_FRAGMENT_SHADER);
+	vertexShaderUniverzal = new Shader("../../Shaders/UniverzalVertexShader.vert",GL_VERTEX_SHADER);
+    fragmentShaderUniverzal = new Shader("../../Shaders/UniverzalFragmentShader.frag",GL_FRAGMENT_SHADER);
     shaderUniverzal = new ShaderProgram();
     shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
 
+	//slunecni soustava shadery
+	vertexShaderSun = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSun = new Shader("../../Shaders/ConstantFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSun = new ShaderProgram();
+	shaderSun->link(*vertexShaderSun,*fragmentShaderSun);
+	shaderSun->setObjectColor(glm::vec3(1.f,1.f,0.f));
+
+	vertexShaderEarth = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderEarth = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderEarth = new ShaderProgram();
+	shaderEarth->link(*vertexShaderEarth,*fragmentShaderEarth);
+	shaderEarth->setObjectColor(glm::vec3(0.f,0.f,1.f));
+
+	vertexShaderMoon = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderMoon = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderMoon = new ShaderProgram();
+	shaderMoon->link(*vertexShaderMoon,*fragmentShaderMoon);
+	shaderMoon->setObjectColor(glm::vec3(0.9f,0.9f,0.8f));
+
+	//pridani do kamery
 	camera->attach(shaderTriangle);
-	camera->attach(shaderRectangle);
-	camera->attach(shaderSphere);
+	camera->attach(shaderSphere1);
+	camera->attach(shaderSphere2);
+	camera->attach(shaderSphere3);
+	camera->attach(shaderSphere4);
 	camera->attach(shaderUniverzal);
 
+	camera->attach(shaderSun);
+	camera->attach(shaderEarth);
+	camera->attach(shaderMoon);
+
+	//pridani svetla
+	light->attach(shaderTriangle);
+	light->attach(shaderSphere1);
+	light->attach(shaderSphere2);
+	light->attach(shaderSphere3);
+	light->attach(shaderSphere4);
+
+	light->attach(shaderSun);
+	light->attach(shaderEarth);
+	light->attach(shaderMoon);
+
 	camera->notify();
+	light->notify();
 }
+
 void Application::createBuffers()
 {
 	//fialovy trojuhelnik
 	modelTriangle = new Model(3,3,0);
-	std::vector<float>triangle(points_triangle,points_triangle + sizeof(points_triangle)/sizeof(float));
-	modelTriangle->load_Data(triangle);
+	std::vector<float>triangle(pointsTriangle,pointsTriangle + sizeof(pointsTriangle)/sizeof(float));
+	modelTriangle->loadData(triangle);
 	objectTriangle= new DrawAbleObject(*modelTriangle, *shaderTriangle);
-
-
-	//barevny tocici se ctverec
-	modelRectangle = new Model(6, 3, 3);
-	std::vector<float>rectangle(points_rectangle, points_rectangle + sizeof(points_rectangle) / sizeof(float));
-	modelRectangle->load_Data(rectangle);
-	objectRectangle = new DrawAbleObject(*modelRectangle, *shaderRectangle);
 	
 	//kulicky 
 	modelSphere = new Model(6,3,3);
 	std::vector<float>sphere1(sphere, sphere + sizeof(sphere) / sizeof(float));
-	modelSphere->load_Data(sphere1);
-	object1Sphere = new DrawAbleObject(*modelSphere,*shaderSphere);
-	object2Sphere = new DrawAbleObject(*modelSphere,*shaderSphere);
-	object3Sphere = new DrawAbleObject(*modelSphere,*shaderSphere);
-	object4Sphere = new DrawAbleObject(*modelSphere,*shaderSphere);
+	modelSphere->loadData(sphere1);
+	object1Sphere = new DrawAbleObject(*modelSphere,*shaderSphere1);
+	object2Sphere = new DrawAbleObject(*modelSphere,*shaderSphere2);
+	object3Sphere = new DrawAbleObject(*modelSphere,*shaderSphere3);
+	object4Sphere = new DrawAbleObject(*modelSphere,*shaderSphere4);
 
-	//Scena 4 
-    groupForScene4.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 3));
-    groupForScene4.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 3));
-    groupForScene4.push_back(makeGroupFrom("SuziSmooth", shaderUniverzal, suziSmooth, sizeof(suziSmooth)/sizeof(float), 3));
-    groupForScene4.push_back(makeGroupFrom("SuziFlat", shaderUniverzal, suziFlat, sizeof(suziFlat)/sizeof(float), 3));
-    groupForScene4.push_back(makeGroupFrom("Plain", shaderUniverzal, plain, sizeof(plain)/sizeof(float), 3));
-    groupForScene4.push_back(makeGroupFrom("Gift", shaderUniverzal, gift, sizeof(gift)/sizeof(float), 3));
-	groupForScene4.push_back(makeGroupFrom("Sphere", shaderUniverzal, sphere, sizeof(sphere)/sizeof(float), 2));
+	//scena3
+	groupForScene3.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 70));
+	groupForScene3.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 80));
 
-	//scena5
-	groupForScene5.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 70));
-	groupForScene5.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 80));
-
+	//scena 4 solar system
+	modelSolarSystem = new Model(6,3,3);
+	std::vector<float>solarSystem(sphere, sphere + sizeof(sphere) / sizeof(float));
+	modelSolarSystem->loadData(solarSystem);
+	objectSun = new DrawAbleObject(*modelSolarSystem,*shaderSun);
+	objectEarth = new DrawAbleObject(*modelSolarSystem,*shaderEarth);
+	objectMoon = new DrawAbleObject(*modelSolarSystem,*shaderMoon);
 }
 
 void Application::buildScene()
@@ -427,170 +371,137 @@ void Application::buildScene()
 	scene2 = new Scene(view,proj);
 	scene3 = new Scene(view,proj);
 	scene4 = new Scene(view,proj);
-	scene5 = new Scene(view,proj);
 
 	//barevny trojuhelnik
-	TransformationGroup* groupTriangle = new TransformationGroup();
-	groupTriangle->addTransformation(new TransformationRotate(glm::vec3(0,0,1),0.0f, 1.f));
+	TransformationComposite* groupTriangle = new TransformationComposite();
+	groupTriangle->addTransformation(new TransformationTranslate(glm::vec3(0.0f, -0.0f, 0.0f), 0.0f));
+	groupTriangle->addTransformation(new TransformationRotate(glm::vec3(0,0,1),0.0f, 100.f));
 	objectTriangle->addTransformation(groupTriangle);
 	scene1->addObject(objectTriangle);
 
-	//barevny ctverec
-	TransformationGroup* groupRectagle = new TransformationGroup();
-    //groupRectagle->addTransformation(new TransformationRotate(glm::vec3(0,0,1), 0.0f,1.f));
-	groupRectagle->addTransformation(new TransformationScale(glm::vec3(1.f,1.f,0.6f),-0.5f));
-	//groupRectagle->addTransformation(new TransformationTranslate(glm::vec3(0,0.00001,0),0.1f));
-	objectRectangle->addTransformation(groupRectagle);
-    scene2->addObject(objectRectangle);
-
 	//kulicky
 	object1Sphere->addTransformation(new TransformationTranslate(glm::vec3(0.f, 0.75f, 0.0f), 0.0f));
-	object1Sphere->addTransformation(new TransformationScale(glm::vec3(0.5f, 0.5f, 0.5f), 0.0f));
+	object1Sphere->addTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f), 0.0f));
 
 	object2Sphere->addTransformation(new TransformationTranslate(glm::vec3(-0.75f, 0.f, 0.0f), 0.0f));;
-	object2Sphere->addTransformation(new TransformationScale(glm::vec3(0.5f, 0.5f, 0.5f), 0.0f));
+	object2Sphere->addTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f), 0.0f));
 
 	object3Sphere->addTransformation(new TransformationTranslate(glm::vec3(0.75f, 0.f, 0.0f), 0.0f));;
-	object3Sphere->addTransformation(new TransformationScale(glm::vec3(0.5f, 0.5f, 0.5f), 0.0f));
+	object3Sphere->addTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f), 0.0f));
 
 	object4Sphere->addTransformation(new TransformationTranslate(glm::vec3(0.f, -0.75f, 0.0f), 0.0f));;
-	object4Sphere->addTransformation(new TransformationScale(glm::vec3(0.5f, 0.5f, 0.5f), 0.0f));
+	object4Sphere->addTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f), 0.0f));
 
-	scene3->addObject(object1Sphere);
-	scene3->addObject(object2Sphere);
-	scene3->addObject(object3Sphere);
-	scene3->addObject(object4Sphere);
+	scene2->addObject(object1Sphere);
+	scene2->addObject(object2Sphere);
+	scene2->addObject(object3Sphere);
+	scene2->addObject(object4Sphere);
 
-	//Scena4 mrizkove rozpolezeni sceny 
-	const int rows = 4; 
-	const int cols = 5;
-	const float left = -1.0f; 
-	const float right = 1.0f;
-	const float bottom = -1.0f;
-	const float top = 1.0f;
-	const float placeWidth = (right - left) / cols;
-	const float placeHeight = (top - bottom) / rows;
-	
-	int i = 0; 
-	for (ObjectGroup* group : groupForScene4) 
-	{
-	 	for (DrawAbleObject* object : group->objects) 
-		{
-			if (i >= rows * cols) 
-			{
-				break;
-			}      
-			int row = i / cols;                 
-			int col = i % cols;                 
-
-			float x = left + (col+0.5f) * placeWidth;
-			float y = top  - (row+ 0.5f) * placeHeight;
-			float z = 1;
-
-			float s = 0.2;
-			if (group->name == "Tree") 
-			{
-            s *= 0.2f; 
-        	}
-			if(group->name == "Bush")
-			{
-				s *= 2;
-			}
-			if(group->name == "Gift")
-			{
-				s*= 2;
-			}
-
-			TransformationGroup* scene4TransGroup = new TransformationGroup();
-			scene4TransGroup->addTransformation(new TransformationTranslate(glm::vec3(x, y, 0.0f), 0.0f));
-			scene4TransGroup->addTransformation(new TransformationScale(glm::vec3(s), 0.0f));
-			scene4TransGroup->addTransformation(new TransformationRotate(glm::vec3(x,y,z),0.f,1.f));
-			object->addTransformation(scene4TransGroup);
-			scene4->addObject(object);
-
-			i++;
-		}
-	}
-
-	//podlaha pro scenu 5
+	//podlaha pro scenu 3
 	{
         ObjectGroup* ground = makeGroupFrom("Ground", shaderUniverzal, plain, sizeof(plain)/sizeof(float), 1);
-        TransformationGroup* froundGroup = new TransformationGroup();
-        froundGroup->addTransformation(new TransformationTranslate(glm::vec3(0.0f, -0.01f, 0.0f), 0.0f));
-        froundGroup->addTransformation(new TransformationScale(glm::vec3(60.0f, 1.0f, 60.0f), 0.0f));
+        TransformationComposite* froundGroup = new TransformationComposite();
+        froundGroup->addTransformation(new TransformationTranslate(glm::vec3(0.0f, -0.01f, 0.0f), 1.0f));
+        froundGroup->addTransformation(new TransformationScale(glm::vec3(60.0f, 1.0f, 60.0f), 1.0f));
         ground->objects[0]->addTransformation(froundGroup);
-        scene5->addObject(ground->objects[0]);
+        scene3->addObject(ground->objects[0]);
     }
 
 
-	//vytvoreni lesa scena 5
-    const float area_half   = 25.0f;      
+	//vytvoreni lesa scena 3
+    const float areaHalf   = 25.0f;      
     const glm::vec2 center   = glm::vec2(0.0f);
-    const float start_radius  = 2.5f;       // volný prostor kolem startu
-    const float ground_y      = 0.0f;
+    const float startRadius  = 2.5f;       // volný prostor kolem startu
+    const float groundY      = 0.0f;
 
     std::srand((unsigned)std::time(nullptr));
 
-    for (ObjectGroup* group : groupForScene5)
+    for (ObjectGroup* group : groupForScene3)
     {
         for (DrawAbleObject* obj : group->objects)
         {
             float x; 
 			float z;
-			bool is_valid = false;
-			while (!is_valid)
+			bool isValid = false;
+			while (!isValid)
 			{
-				x = -area_half + (2.0f * area_half) * (std::rand() / (float)RAND_MAX);
-				z = -area_half + (2.0f * area_half) * (std::rand() / (float)RAND_MAX);
+				x = -areaHalf + (2.0f * areaHalf) * (std::rand() / (float)RAND_MAX);
+				z = -areaHalf + (2.0f * areaHalf) * (std::rand() / (float)RAND_MAX);
 
 				float distance = glm::length(glm::vec2(x, z) - center);
-				if(distance >= start_radius)
+				if(distance >= startRadius)
 				{
-					is_valid = true;
+					isValid = true;
 				}
 				else
 				{
-					is_valid = false;
+					isValid = false;
 				}
 			}
 
-            float min_size = 0.6f;
-			float max_size = 1.4f;      
+            float minSize = 0.6f;
+			float maxSize = 1.4f;      
             if (group->name == "Bush") 
 			{ 
-				min_size = 0.3f; 
-				max_size = 0.8f; 
+				minSize = 0.3f; 
+				maxSize = 0.8f; 
 			}
-            float size = min_size + (max_size - min_size) * (std::rand() / (float)RAND_MAX);
+            float size = minSize + (maxSize - minSize) * (std::rand() / (float)RAND_MAX);
 
 
-            float reandom_angle = -180.f + 360.f * (std::rand() / (float)RAND_MAX);
-            float angle_in_radians = glm::radians(reandom_angle);
+            float randomAngle = -180.f + 360.f * (std::rand() / (float)RAND_MAX);
+            float angleInRadians = glm::radians(randomAngle);
 
-            TransformationGroup* transGroup5 = new TransformationGroup();
-            transGroup5->addTransformation(new TransformationTranslate(glm::vec3(x, ground_y, z), 0.0f));
-            transGroup5->addTransformation(new TransformationRotate(glm::vec3(0,1,0), reandom_angle, 0.0f));
-            transGroup5->addTransformation(new TransformationScale(glm::vec3(size), 0.0f));
-            obj->addTransformation(transGroup5);
+            TransformationComposite* transGroup3 = new TransformationComposite();
+            transGroup3->addTransformation(new TransformationTranslate(glm::vec3(x, groundY, z), 1.0f));
+            transGroup3->addTransformation(new TransformationRotate(glm::vec3(0,1,0), randomAngle, 0.0f));
+            transGroup3->addTransformation(new TransformationScale(glm::vec3(size), 1.0f));
+            obj->addTransformation(transGroup3);
 
-            scene5->addObject(obj);
+            scene3->addObject(obj);
         }
     }
+
+	//vytvoreni solar system pr osceny 4
+	TransformationComposite* transGroupSun = new TransformationComposite();
+	transGroupSun->addTransformation(new TransformationScale(glm::vec3(2.f), 0.f));  
+	transGroupSun->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 0.f, 8.f)); 
+	objectSun->addTransformation(transGroupSun);
+
+	TransformationComposite* transGroupEarth = new TransformationComposite();
+	transGroupEarth->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 0.f, 12.f));  
+	transGroupEarth->addTransformation(new TransformationTranslate(glm::vec3(6.f, 0.f, 0.f), 0.f));     
+	transGroupEarth->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 0.f, 80.f));
+	transGroupEarth->addTransformation(new TransformationScale(glm::vec3(0.7f), 0.f));
+	objectEarth->addTransformation(transGroupEarth);
+	objectEarth->setParentSpace(objectSun);
+
+	TransformationComposite* transGroupMoon = new TransformationComposite();
+	transGroupMoon->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 0.f, 50.f));  
+	transGroupMoon->addTransformation(new TransformationTranslate(glm::vec3(3.f, 0.f, 0.f), 0.f));     
+	transGroupMoon->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 0.f, 50.f));   
+	transGroupMoon->addTransformation(new TransformationScale(glm::vec3(0.3f), 0.f)); 
+	objectMoon->addTransformation(transGroupMoon);
+	objectMoon->setParentSpace(objectEarth);
+
+	scene4->addObject(objectSun);
+	scene4->addObject(objectEarth);
+	scene4->addObject(objectMoon);
 }
 
 float angle= 0.0f;
 float deltaTime = 0.0f;
-float current_time = 0.0f;
-float previous_time = 0.0f;
+float currentTime = 0.0f;
+float previousTime = 0.0f;
 void Application::run()
 {
 	int lastScene = 0;
 	glEnable(GL_DEPTH_TEST);//Do depth comparisons and update the depth buffer.
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		previous_time = current_time;
-		current_time = glfwGetTime();
-		deltaTime = current_time - previous_time;
+		previousTime = currentTime;
+		currentTime = glfwGetTime();
+		deltaTime = currentTime - previousTime;
 		if(sceneNow != lastScene)
 		{
 			switch (sceneNow)
@@ -611,23 +522,18 @@ void Application::run()
 				printf("Scene4");
 				sceneActual = scene4;
 				break;
-			case 5:
-				printf("Scene5");
-				sceneActual = scene5;
-				break;
 			}
 			//sceneActual->reset();
 			lastScene = sceneNow;
 		}
 
-		controller->process_keyboard(window, deltaTime);
+		controller->processKeyboard(window, deltaTime);
 
 		glm::mat4 view = camera->getCamera();
 		glm::mat4 proj = camera->projectionMatrix();
 		
 		sceneActual->setView(view);
 		sceneActual->setProjection(proj);
-		sceneActual->updateScene(deltaTime);
 		sceneActual->drawScene();
 
 		glfwPollEvents();

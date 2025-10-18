@@ -7,10 +7,10 @@ class Shader
 public:
     Shader(const char* source, GLenum type);
     ~Shader();
-    bool compile_shader();
+    bool compileShader();
     void attachShader(GLuint shaderProgram);
 private:
-    GLuint shader_id;
+    GLuint shaderId;
     GLenum type;
     const char* source;
 };   

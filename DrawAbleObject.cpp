@@ -1,12 +1,10 @@
 #include "DrawAbleObject.h"
 
-DrawAbleObject::DrawAbleObject(Model& model, ShaderProgram& shader_program):model(model),shader_program(shader_program){}
-
-DrawAbleObject::~DrawAbleObject() 
-{
-    clearTransformation();
+DrawAbleObject::DrawAbleObject(Model& model, ShaderProgram& shaderProgram):model(model),shaderProgram(shaderProgram){
+	transformations = new TransformationComposite();
 }
-void DrawAbleObject::addTransformation(Transformation* transformation)
+
+void DrawAbleObject::addTransformation(TransformationComponent* transformation)
 {
 	if(!transformation)
 	{
@@ -14,42 +12,37 @@ void DrawAbleObject::addTransformation(Transformation* transformation)
 	}
 	else
 	{
-		this->transformations.push_back(transformation);
-	}
-}
-
-void DrawAbleObject::clearTransformation()
-{
-	for (Transformation* transformation : transformations) 
-	{
-		delete transformation;
-	}
-    transformations.clear();
-}
-
-void DrawAbleObject::update(float deltaTime)
-{
-	for(Transformation* transformation : transformations)
-	{
-		transformation->update(deltaTime);
+		transformations->addTransformation(transformation);
 	}
 }
 
 glm::mat4 DrawAbleObject::combiMatrix()
 {
 	glm::mat4 matrix(1.0f);
-	for(Transformation* transformation : transformations)
+	matrix = matrix * transformations->getMatrix();
+	if (this->parentSpace) 
 	{
-		matrix = matrix * transformation->getMatrix();
-	}
+        matrix = parentSpace->combiMatrix() * matrix;
+    }
 	return matrix;
+}
+
+void DrawAbleObject::setParentSpace(DrawAbleObject* newParentSpace)
+{
+	this->parentSpace = newParentSpace;
+	if(parentSpace)
+	{
+		this->parentSpace->childrenSpace.push_back(this);
+	}
 }
 
 
 void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
 {
 	glm::mat4 matrix = combiMatrix();
-	shader_program.use_shader_program();
-    shader_program.setUniform("modelMatrix", matrix);
-    model.draw_Model();
+	shaderProgram.useShaderProgram();
+    shaderProgram.setUniform("modelMatrix", matrix);
+    shaderProgram.setUniform("viewMatrix", view);
+    shaderProgram.setUniform("projectionMatrix", proj);
+    model.drawModel();
 }

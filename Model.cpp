@@ -9,13 +9,13 @@ Model::Model(int jump, int positionSize, int color)
 	this->VBO = 0;
 }
 
-void Model::load_Data(const std::vector<float>& points)
+void Model::loadData(const std::vector<float>& points)
 {
 	this->points = points;
-	setup_Model();
+	setupModel();
 }
 
-void Model::setup_Model()
+void Model::setupModel()
 {
 	glGenVertexArrays(1, &VAO); //generate the VAO
 	glBindVertexArray(VAO); //bind the VAO
@@ -41,7 +41,7 @@ void Model::setup_Model()
 	glBindVertexArray(0);
 }
 
-void Model::draw_Model()
+void Model::drawModel()
 {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, points.size() / jump);

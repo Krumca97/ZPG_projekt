@@ -13,9 +13,7 @@ public:
 
     void setView(glm::mat4& view);
     void setProjection(glm::mat4& proj);
-    void updateScene(float deltaTime);
     
-    void reset();
     void drawScene();
 
 private:

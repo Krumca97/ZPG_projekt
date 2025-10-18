@@ -44,21 +44,6 @@ void Scene::setProjection(glm::mat4& proj)
     this->proj = proj;
 }
 
-void Scene::updateScene(float deltaTime)
-{
-    for(auto& object : drawAbleObjects)
-    {
-        object->update(deltaTime);
-    }
-}
-
-void Scene::reset()
-{
-    for(auto& object : drawAbleObjects)
-    {
-        object->update(0);
-    }
-}
 
 void Scene::drawScene()
 {
