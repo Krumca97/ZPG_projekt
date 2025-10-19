@@ -128,7 +128,6 @@ glm::mat4 CameraSubject::getViewMatrix(){
     return glm::lookAt(this->position,this->position + this->getForward(),this->worldUp);
 }
 
-
 float CameraSubject::getCameraSpeed()
 {
     return this->moveSpeed;

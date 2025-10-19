@@ -10,8 +10,7 @@ public:
     void processMouse(GLFWwindow* window, float x_pos, float y_pos);
 
     void setMouseEnabled(bool enabled);
-
-     CameraSubject* getCamera();
+    CameraSubject* getCamera();
 
 private:
     CameraSubject* camera;

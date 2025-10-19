@@ -1,16 +1,15 @@
 #version 330 core
 
-in vec3 fragPos;   // ve view space
-in vec3 normal;    // ve view space
+in vec3 fragPos;
+in vec3 normal;
 
 out vec4 fragColor;
 
-uniform vec3 lightPosition;   // světlo je z C++ pořád ve WORLD space
+uniform vec3 lightPosition;
 uniform vec3 lightColor;
-uniform float lightIntensity; 
+uniform float lightIntensity;
 uniform vec3 objectColor;
-uniform mat4 viewMatrix;      // přidáme viewMatrix
-// viewPos není třeba — v view prostoru je kamera vždy v (0,0,0)
+uniform mat4 viewMatrix;
 
 void main()
 {

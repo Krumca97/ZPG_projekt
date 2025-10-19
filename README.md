@@ -107,3 +107,7 @@ Pokud **`glew32.lib`** , musí být **`glew32.dll`** ve **stejné složce jako .
 
 - LAN0229_3 (https://youtu.be/pwPT7a5Sz7w)
 
+## Cviceni 5
+
+- LAN0229 (https://youtu.be/e57SLq8hGVg)
+

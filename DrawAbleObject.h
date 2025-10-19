@@ -28,5 +28,4 @@ private:
 	glm::mat4 combiMatrix();
 	DrawAbleObject* parentSpace = nullptr;
 	std::vector<DrawAbleObject*> childrenSpace;
-
 };

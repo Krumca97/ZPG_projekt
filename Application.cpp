@@ -150,7 +150,8 @@ void Application::check()
 bool Application::initialization()
 {
 	glfwSetErrorCallback(error_callback);
-	if (!glfwInit()) {
+	if (!glfwInit()) 
+	{
 		fprintf(stderr, "ERROR: could not start GLFW3\n");
 		exit(EXIT_FAILURE);
 	}
@@ -170,13 +171,11 @@ bool Application::initialization()
 	{
         window = glfwCreateWindow(mode->width, mode->height, "ZPG", monitor, NULL);
 		glfwSetWindowSizeCallback(window, window_size_callback);
-
     } 
 	else 
 	{
         window = glfwCreateWindow(width1, height1, "ZPG", NULL, NULL);
 		glfwSetWindowSizeCallback(window, window_size_callback);
-
     }
 
 
@@ -197,11 +196,6 @@ bool Application::initialization()
 	int major, minor, revision;
 	glfwGetVersion(&major, &minor, &revision);
 	printf("Using GLFW %i.%i.%i\n", major, minor, revision);
-
-	// int width, height;
-	// glfwGetFramebufferSize(window, &width, &height);
-	// ratio = width / (float)height;
-	// glViewport(0, 0, width, height);
 
 	camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f),glm::quat(1.f, 0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f),60.f, ratio,0.1f, 100.f,2.5f, 0.1f);
 	controller = new Controller(camera);
@@ -523,7 +517,6 @@ void Application::run()
 				sceneActual = scene4;
 				break;
 			}
-			//sceneActual->reset();
 			lastScene = sceneNow;
 		}
 
