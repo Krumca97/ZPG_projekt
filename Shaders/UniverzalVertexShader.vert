@@ -9,10 +9,11 @@ uniform mat4 projectionMatrix;
 
 out vec3 color;
 
-void main() {
+void main() 
+{
     mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
 
     gl_Position = MVP * vec4(aPos, 1.0);
 
     color = normalize(aNormal) * 0.5 + 0.5;
-};
+}

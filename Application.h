@@ -48,6 +48,8 @@ private:
 
 	//Svetlo
 	LightSubject* light = nullptr;
+	LightSubject* light1 = nullptr;
+	std::vector<LightSubject*> fireflies;
 
 	//fialovy trojuhelnik
 	Shader* vertexShaderTrinagle = nullptr;

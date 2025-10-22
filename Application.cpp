@@ -237,6 +237,25 @@ bool Application::initialization()
 		1.f
 	);
 
+	light1 = new LightSubject(
+		glm::vec3(10.f, 20.f, 10.f),
+		glm::vec3(1.f, 0.95f, 0.8f),
+		1.2f
+	);
+
+	for (int i = 0; i < 8; i++) 
+	{
+		float x = -25.f + (std::rand() / (float)RAND_MAX) * 50.f;
+		float y = 1.0f + (std::rand() / (float)RAND_MAX) * 4.f;
+		float z = -25.f + (std::rand() / (float)RAND_MAX) * 50.f;
+
+		glm::vec3 pos(x, y, z);
+		glm::vec3 color(1.0f, 0.95f, 0.7f); 
+		float intensity = 0.07f;
+
+		fireflies.push_back(new LightSubject(pos, color, intensity));
+	}
+
 	return true;
 }
 
@@ -275,10 +294,17 @@ void Application::createShaders()
 	shaderSphere4->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
 
 	//univerzalni shader
-	vertexShaderUniverzal = new Shader("../../Shaders/UniverzalVertexShader.vert",GL_VERTEX_SHADER);
-    fragmentShaderUniverzal = new Shader("../../Shaders/UniverzalFragmentShader.frag",GL_FRAGMENT_SHADER);
+	// vertexShaderUniverzal = new Shader("../../Shaders/UniverzalVertexShader.vert",GL_VERTEX_SHADER);
+    // fragmentShaderUniverzal = new Shader("../../Shaders/UniverzalFragmentShader.frag",GL_FRAGMENT_SHADER);
+    // shaderUniverzal = new ShaderProgram();
+    // shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
+
+	//shadery pro stromy a kere
+	vertexShaderUniverzal = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+    fragmentShaderUniverzal = new Shader("../../Shaders/PhongFragmentShader.frag",GL_FRAGMENT_SHADER);
     shaderUniverzal = new ShaderProgram();
     shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
+	shaderUniverzal->setObjectColor(glm::vec3(0.f,1.f,0.f));
 
 	//slunecni soustava shadery
 	vertexShaderSun = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
@@ -317,6 +343,12 @@ void Application::createShaders()
 	light->attach(shaderSphere2);
 	light->attach(shaderSphere3);
 	light->attach(shaderSphere4);
+
+	for(LightSubject* firefly : fireflies)
+	{
+		firefly->attach(shaderUniverzal);
+		firefly->notify();
+	}
 
 	light->attach(shaderSun);
 	light->attach(shaderEarth);
@@ -527,6 +559,19 @@ void Application::run()
 		
 		sceneActual->setView(view);
 		sceneActual->setProjection(proj);
+		shaderUniverzal->resetLight();
+		for (auto* firefly : fireflies)
+		{
+			firefly->notify();
+		}
+		shaderUniverzal->uploadLights();
+		shaderEarth->uploadLights();
+		shaderMoon->uploadLights();
+		shaderSphere1->uploadLights();
+		shaderSphere2->uploadLights();
+		shaderSphere3->uploadLights();
+		shaderSphere4->uploadLights();
+		shaderSun->uploadLights();
 		sceneActual->drawScene();
 
 		glfwPollEvents();

@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "IObserverCamera.h"
 #include "IObserverLight.h"
+#include <vector>
 
 class ShaderProgram : public IObserverCamera, public IObserverLight
 {
@@ -26,7 +27,13 @@ public:
 	void onCameraChange(glm::mat4 view,glm::mat4 proj,glm::vec3 cameraPos) override;
 	void onLightChange(glm::vec3 position, glm::vec3 color, float intensity) override;
 	void setObjectColor(glm::vec3 color) override;
+	void resetLight();
+	void uploadLights();
 private:
 	GLuint shaderProgramId;
+	int lightIndex;
+	std::vector<glm::vec3> lightPositions;
+	std::vector<glm::vec3> lightColors;
+	std::vector<float> lightIntensities;
 };
 

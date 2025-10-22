@@ -1,30 +1,38 @@
 #version 330 core
 
+const int maxLight = 8;
 in vec3 fragPos;
 in vec3 normal;
 
 out vec4 fragColor;
 
-uniform vec3 lightPosition;
-uniform vec3 lightColor;
-uniform float lightIntensity;
+uniform vec3 lightPosition[maxLight];
+uniform vec3 lightColor[maxLight];
+uniform float lightIntensity[maxLight];
 uniform vec3 objectColor;
 uniform vec3 viewPos;
 
 void main()
 {
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(lightPosition - fragPos);
     vec3 viewDir = normalize(viewPos - fragPos);
-    vec3 halfwayDir = normalize(lightDir + viewDir);
+    vec3 ambient  = 0.1 * objectColor;
+    vec3 result = vec3(0.0);
 
-    float diff = max(dot(norm, lightDir), 0.0);
-    float spec = pow(max(dot(norm, halfwayDir), 0.0), 64.0);
+    for(int i = 0;i<1;i++)
+    {
+        vec3 lightDir = normalize(lightPosition[i] - fragPos);
+        vec3 halfWayDir = normalize(lightDir + viewDir);
 
-    vec3 ambient  = 0.1 * lightColor * objectColor;
-    vec3 diffuse  = diff * lightColor * lightIntensity * objectColor;
-    vec3 specular = spec * lightColor * lightIntensity * objectColor;
+        float diff = max(dot(norm, lightDir), 0.0);
+        float spec = pow(max(dot(norm, halfWayDir), 0.0), 64.0);
 
-    vec3 result = ambient + diffuse + specular;
+        vec3 diffuse  = diff * lightColor[i] * lightIntensity[i] * objectColor;
+        vec3 specular = spec * lightColor[i] * lightIntensity[i] * objectColor;
+        
+        result += diffuse + specular;
+    }
+
+    result += ambient;
     fragColor = vec4(result, 1.0);
 }
