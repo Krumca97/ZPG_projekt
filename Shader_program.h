@@ -29,6 +29,7 @@ public:
 	void setObjectColor(glm::vec3 color) override;
 	void resetLight();
 	void uploadLights();
+	void setLightIndex(int lightIndex);
 private:
 	GLuint shaderProgramId;
 	int lightIndex;

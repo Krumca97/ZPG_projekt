@@ -42,15 +42,6 @@ private:
 
 	GLFWwindow* window = nullptr;
 
-	//Kamera
-	CameraSubject* camera = nullptr;
-	Controller* controller = nullptr;
-
-	//Svetlo
-	LightSubject* light = nullptr;
-	LightSubject* light1 = nullptr;
-	std::vector<LightSubject*> fireflies;
-
 	//fialovy trojuhelnik
 	Shader* vertexShaderTrinagle = nullptr;
 	Shader* fragmentShaderTriangle = nullptr;
@@ -93,6 +84,10 @@ private:
 
 	//scena3
 	std::vector<ObjectGroup*> groupForScene3;
+	Shader* vertexShaderSphereForest = nullptr;
+	Shader* fragmentShaderSphereForest = nullptr;
+	ShaderProgram* shaderSphereForest = nullptr;
+	DrawAbleObject* objectForestSphere = nullptr;
 
 	//Slunecni soustava
 	Shader* vertexShaderSun = nullptr;
@@ -114,7 +109,6 @@ private:
 	Scene* scene2 = nullptr;
 	Scene* scene3 = nullptr;
 	Scene* scene4 = nullptr;
-	Scene* scene5 = nullptr;
 	Scene* sceneActual = scene1;	
 
 	static void error_callback(int error, const char* description);

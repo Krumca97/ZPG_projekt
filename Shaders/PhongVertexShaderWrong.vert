@@ -16,7 +16,7 @@ void main()
     fragPos = viewPos.xyz;
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    normal = normalMatrix * aNormal;
+    normal = normalize(normalMatrix * aNormal);
 
     gl_Position = projectionMatrix * viewPos;
 }

@@ -18,7 +18,8 @@ void main()
     vec3 viewDir = normalize(viewPos - fragPos);
     vec3 ambient  = 0.1 * objectColor;
     vec3 result = vec3(0.0);
-
+    result += ambient;
+    
     for(int i = 0;i<1;i++)
     {
         vec3 lightDir = normalize(lightPosition[i] - fragPos);
@@ -32,7 +33,5 @@ void main()
         
         result += diffuse + specular;
     }
-
-    result += ambient;
     fragColor = vec4(result, 1.0);
 }

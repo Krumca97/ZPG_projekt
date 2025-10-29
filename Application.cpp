@@ -121,12 +121,12 @@ void Application::window_size_callback(GLFWwindow* window, int width, int height
 
     ratio = static_cast<float>(width) / static_cast<float>(height);
 
-    Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(window));
-    if (ctrl && ctrl->getCamera())
-    {
-        ctrl->getCamera()->setWindowRatio(ratio);
-        ctrl->getCamera()->notify();
-    }
+	Scene* activeScene = static_cast<Scene*>(glfwGetWindowUserPointer(window));
+	if (activeScene && activeScene->getCamera())
+	{
+		activeScene->getCamera()->setWindowRatio(ratio);
+		activeScene->getCamera()->notify();
+	}
 }
 
 void Application::cursor_callback(GLFWwindow* window, double x, double y)
@@ -197,64 +197,38 @@ bool Application::initialization()
 	glfwGetVersion(&major, &minor, &revision);
 	printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
-	camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f),glm::quat(1.f, 0.f, 0.f, 0.f),glm::vec3(0.f, 1.f, 0.f),60.f, ratio,0.1f, 100.f,2.5f, 0.1f);
-	controller = new Controller(camera);
-
-	glfwSetWindowUserPointer(window, controller);
 	glfwSetCursorPosCallback(window, [](GLFWwindow* win, double x, double y) 
 	{
-		Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(win));
-		if (ctrl) 
+		Scene* scene = static_cast<Scene*>(glfwGetWindowUserPointer(win));
+		if (!scene || !scene->getController())
 		{
-			ctrl->processMouse(win, x, y);
+			return;
+		}
+
+		if (glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+		{
+			scene->getController()->processMouse(win, x, y);
 		}
 	});
 
 	glfwSetMouseButtonCallback(window, [](GLFWwindow* win, int button, int action, int mods) 
 	{
-		Controller* ctrl = static_cast<Controller*>(glfwGetWindowUserPointer(win));
-		if (!ctrl) 
-		{
+		Scene* scene = static_cast<Scene*>(glfwGetWindowUserPointer(win));
+		if (!scene || !scene->getController())
 			return;
-		}
-		if (button == GLFW_MOUSE_BUTTON_RIGHT) 
+
+		Controller* ctrl = scene->getController();
+
+		if (button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
 			ctrl->setMouseEnabled(action == GLFW_PRESS);
+
 			if (action == GLFW_PRESS)
-			{
 				glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			}
 			else
-			{
 				glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			}
 		}
 	});
-
-	light = new LightSubject(
-		glm::vec3(0.f,0.f,0.f),
-		glm::vec3(0.7f,0.8f,1.f),
-		1.f
-	);
-
-	light1 = new LightSubject(
-		glm::vec3(10.f, 20.f, 10.f),
-		glm::vec3(1.f, 0.95f, 0.8f),
-		1.2f
-	);
-
-	for (int i = 0; i < 8; i++) 
-	{
-		float x = -25.f + (std::rand() / (float)RAND_MAX) * 50.f;
-		float y = 1.0f + (std::rand() / (float)RAND_MAX) * 4.f;
-		float z = -25.f + (std::rand() / (float)RAND_MAX) * 50.f;
-
-		glm::vec3 pos(x, y, z);
-		glm::vec3 color(1.0f, 0.95f, 0.7f); 
-		float intensity = 0.07f;
-
-		fireflies.push_back(new LightSubject(pos, color, intensity));
-	}
 
 	return true;
 }
@@ -269,35 +243,29 @@ void Application::createShaders()
 	shaderTriangle->setObjectColor(glm::vec3(1.f,0.f,1.f));
 
 	//shadery pro kulicky
-	vertexShaderSphere1 = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderSphere1 = new Shader("../../Shaders/ConstantFragmentShader.frag",GL_FRAGMENT_SHADER);
+	vertexShaderSphere1 = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere1 = new Shader("../../Shaders/PhongFragmentShaderWrong.frag",GL_FRAGMENT_SHADER);
 	shaderSphere1 = new ShaderProgram();
 	shaderSphere1->link(*vertexShaderSphere1,*fragmentShaderSphere1);
 	shaderSphere1->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
 
-	vertexShaderSphere2 = new Shader("../../Shaders/LambertVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderSphere2 = new Shader("../../Shaders/LambertFragmentShader.frag",GL_FRAGMENT_SHADER);
+	vertexShaderSphere2 = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere2 = new Shader("../../Shaders/PhongFragmentShaderWrong.frag",GL_FRAGMENT_SHADER);
 	shaderSphere2 = new ShaderProgram();
 	shaderSphere2->link(*vertexShaderSphere2,*fragmentShaderSphere2);
 	shaderSphere2->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
 
 	vertexShaderSphere3 = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderSphere3 = new Shader("../../Shaders/PhongFragmentShader.frag",GL_FRAGMENT_SHADER);
+	fragmentShaderSphere3 = new Shader("../../Shaders/PhongFragmentShaderWrong.frag",GL_FRAGMENT_SHADER);
 	shaderSphere3 = new ShaderProgram();
 	shaderSphere3->link(*vertexShaderSphere3,*fragmentShaderSphere3);
 	shaderSphere3->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
 
-	vertexShaderSphere4 = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderSphere4 = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	vertexShaderSphere4 = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphere4 = new Shader("../../Shaders/PhongFragmentShaderWrong.frag",GL_FRAGMENT_SHADER);
 	shaderSphere4 = new ShaderProgram();
 	shaderSphere4->link(*vertexShaderSphere4,*fragmentShaderSphere4);
 	shaderSphere4->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
-
-	//univerzalni shader
-	// vertexShaderUniverzal = new Shader("../../Shaders/UniverzalVertexShader.vert",GL_VERTEX_SHADER);
-    // fragmentShaderUniverzal = new Shader("../../Shaders/UniverzalFragmentShader.frag",GL_FRAGMENT_SHADER);
-    // shaderUniverzal = new ShaderProgram();
-    // shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
 
 	//shadery pro stromy a kere
 	vertexShaderUniverzal = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
@@ -306,6 +274,12 @@ void Application::createShaders()
     shaderUniverzal->link(*vertexShaderUniverzal,*fragmentShaderUniverzal);
 	shaderUniverzal->setObjectColor(glm::vec3(0.f,1.f,0.f));
 
+	vertexShaderSphereForest = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderSphereForest = new Shader("../../Shaders/ConstantFragmentShader.frag",GL_FRAGMENT_SHADER);
+	shaderSphereForest = new ShaderProgram();
+	shaderSphereForest->link(*vertexShaderSphereForest,*fragmentShaderSphereForest);
+	shaderSphereForest->setObjectColor(glm::vec3(0.7f,0.8f,1.f));
+
 	//slunecni soustava shadery
 	vertexShaderSun = new Shader("../../Shaders/ConstantVertexShader.vert",GL_VERTEX_SHADER);
 	fragmentShaderSun = new Shader("../../Shaders/ConstantFragmentShader.frag",GL_FRAGMENT_SHADER);
@@ -313,49 +287,17 @@ void Application::createShaders()
 	shaderSun->link(*vertexShaderSun,*fragmentShaderSun);
 	shaderSun->setObjectColor(glm::vec3(1.f,1.f,0.f));
 
-	vertexShaderEarth = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderEarth = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	vertexShaderEarth = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderEarth = new Shader("../../Shaders/PhongFragmentShader.frag",GL_FRAGMENT_SHADER);
 	shaderEarth = new ShaderProgram();
 	shaderEarth->link(*vertexShaderEarth,*fragmentShaderEarth);
 	shaderEarth->setObjectColor(glm::vec3(0.f,0.f,1.f));
 
-	vertexShaderMoon = new Shader("../../Shaders/BlinnPhonVertexShader.vert",GL_VERTEX_SHADER);
-	fragmentShaderMoon = new Shader("../../Shaders/BlinnPhonFragmentShader.frag",GL_FRAGMENT_SHADER);
+	vertexShaderMoon = new Shader("../../Shaders/PhongVertexShader.vert",GL_VERTEX_SHADER);
+	fragmentShaderMoon = new Shader("../../Shaders/PhongFragmentShader.frag",GL_FRAGMENT_SHADER);
 	shaderMoon = new ShaderProgram();
 	shaderMoon->link(*vertexShaderMoon,*fragmentShaderMoon);
 	shaderMoon->setObjectColor(glm::vec3(0.9f,0.9f,0.8f));
-
-	//pridani do kamery
-	camera->attach(shaderTriangle);
-	camera->attach(shaderSphere1);
-	camera->attach(shaderSphere2);
-	camera->attach(shaderSphere3);
-	camera->attach(shaderSphere4);
-	camera->attach(shaderUniverzal);
-
-	camera->attach(shaderSun);
-	camera->attach(shaderEarth);
-	camera->attach(shaderMoon);
-
-	//pridani svetla
-	light->attach(shaderTriangle);
-	light->attach(shaderSphere1);
-	light->attach(shaderSphere2);
-	light->attach(shaderSphere3);
-	light->attach(shaderSphere4);
-
-	for(LightSubject* firefly : fireflies)
-	{
-		firefly->attach(shaderUniverzal);
-		firefly->notify();
-	}
-
-	light->attach(shaderSun);
-	light->attach(shaderEarth);
-	light->attach(shaderMoon);
-
-	camera->notify();
-	light->notify();
 }
 
 void Application::createBuffers()
@@ -378,6 +320,7 @@ void Application::createBuffers()
 	//scena3
 	groupForScene3.push_back(makeGroupFrom("Tree", shaderUniverzal, tree, sizeof(tree)/sizeof(float), 70));
 	groupForScene3.push_back(makeGroupFrom("Bush", shaderUniverzal, bushes, sizeof(bushes)/sizeof(float), 80));
+	objectForestSphere = new DrawAbleObject(*modelSphere,*shaderSphereForest);
 
 	//scena 4 solar system
 	modelSolarSystem = new Model(6,3,3);
@@ -390,13 +333,18 @@ void Application::createBuffers()
 
 void Application::buildScene()
 {
-	glm::mat4 proj = camera->projectionMatrix();
-	glm::mat4 view = camera->getCamera();
+	glm::mat4 view(1.0f);
+	glm::mat4 proj(1.0f);
 
-	scene1 = new Scene(view,proj);
-	scene2 = new Scene(view,proj);
-	scene3 = new Scene(view,proj);
-	scene4 = new Scene(view,proj);
+	scene1 = new Scene(view, proj);
+	scene2 = new Scene(view, proj);
+	scene3 = new Scene(view, proj);
+	scene4 = new Scene(view, proj);
+
+	scene1->setCamera(ratio);
+	scene2->setCamera(ratio);
+	scene3->setCamera(ratio);
+	scene4->setCamera(ratio);
 
 	//barevny trojuhelnik
 	TransformationComposite* groupTriangle = new TransformationComposite();
@@ -417,7 +365,16 @@ void Application::buildScene()
 
 	object4Sphere->addTransformation(new TransformationTranslate(glm::vec3(0.f, -0.75f, 0.0f), 0.0f));;
 	object4Sphere->addTransformation(new TransformationScale(glm::vec3(0.2f, 0.2f, 0.2f), 0.0f));
-
+	scene2->addShaderProgram(shaderSphere1);
+	scene2->addShaderProgram(shaderSphere2);
+	scene2->addShaderProgram(shaderSphere3);
+	scene2->addShaderProgram(shaderSphere4);
+	LightSubject* mainLight = new LightSubject(
+		glm::vec3(0.f, 0.f, 0.f),
+    	glm::vec3(0.7f, 0.8f, 1.f),
+    	1.f
+	);
+	scene2->addLight(mainLight);
 	scene2->addObject(object1Sphere);
 	scene2->addObject(object2Sphere);
 	scene2->addObject(object3Sphere);
@@ -431,8 +388,10 @@ void Application::buildScene()
         froundGroup->addTransformation(new TransformationScale(glm::vec3(60.0f, 1.0f, 60.0f), 1.0f));
         ground->objects[0]->addTransformation(froundGroup);
         scene3->addObject(ground->objects[0]);
+		scene3->addShaderProgram(shaderUniverzal);
     }
 
+	scene3->buildFireflies(modelSphere, shaderSphereForest,scene3);
 
 	//vytvoreni lesa scena 3
     const float areaHalf   = 25.0f;      
@@ -485,6 +444,8 @@ void Application::buildScene()
             obj->addTransformation(transGroup3);
 
             scene3->addObject(obj);
+			scene3->addShaderProgram(shaderUniverzal);
+
         }
     }
 
@@ -510,15 +471,26 @@ void Application::buildScene()
 	objectMoon->addTransformation(transGroupMoon);
 	objectMoon->setParentSpace(objectEarth);
 
+	scene4->addShaderProgram(shaderSun);
+	scene4->addShaderProgram(shaderEarth);
+	scene4->addShaderProgram(shaderMoon);
+	LightSubject* sunLight = new LightSubject(
+		glm::vec3(0.f, 0.f, 0.f),
+    	glm::vec3(0.7f, 0.8f, 1.f),
+    	1.f
+	);
+	scene4->addLight(sunLight);
 	scene4->addObject(objectSun);
 	scene4->addObject(objectEarth);
 	scene4->addObject(objectMoon);
+
 }
 
 float angle= 0.0f;
 float deltaTime = 0.0f;
 float currentTime = 0.0f;
 float previousTime = 0.0f;
+
 void Application::run()
 {
 	int lastScene = 0;
@@ -552,26 +524,18 @@ void Application::run()
 			lastScene = sceneNow;
 		}
 
-		controller->processKeyboard(window, deltaTime);
+		glfwSetWindowUserPointer(window, sceneActual);
+		sceneActual->updateCamera(window, deltaTime);
 
-		glm::mat4 view = camera->getCamera();
-		glm::mat4 proj = camera->projectionMatrix();
-		
-		sceneActual->setView(view);
-		sceneActual->setProjection(proj);
-		shaderUniverzal->resetLight();
-		for (auto* firefly : fireflies)
-		{
-			firefly->notify();
+		if (sceneNow == 3)
+		{	
+			sceneActual->updateLights(1);
+			sceneActual->updateFireflies();
 		}
-		shaderUniverzal->uploadLights();
-		shaderEarth->uploadLights();
-		shaderMoon->uploadLights();
-		shaderSphere1->uploadLights();
-		shaderSphere2->uploadLights();
-		shaderSphere3->uploadLights();
-		shaderSphere4->uploadLights();
-		shaderSun->uploadLights();
+		else
+		{
+			sceneActual->updateLights(0);
+		}
 		sceneActual->drawScene();
 
 		glfwPollEvents();

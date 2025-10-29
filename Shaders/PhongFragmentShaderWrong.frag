@@ -16,12 +16,12 @@ uniform mat4 viewMatrix;
 void main()
 {
     vec3 norm = normalize(normal);
-    vec3 viewDir = normalize(-fragPos);
+    vec3 viewDir = normalize(-fragPos); 
 
     vec3 ambient = 0.08 * objectColor;
     vec3 result = ambient;
 
-    for (int i = 0; i < lightCount; i++)
+    for (int i = 0; i < 1; i++)
     {
         vec3 lightPosView = vec3(viewMatrix * vec4(lightPosition[i], 1.0));
         vec3 lightDir = normalize(lightPosView - fragPos);
@@ -33,7 +33,7 @@ void main()
         vec3 diffuse = diff * lightColor[i] * lightIntensity[i] * objectColor;
 
         vec3 reflectDir = reflect(-lightDir, norm);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), 5.0);
         vec3 specular = spec * lightColor[i] * lightIntensity[i];
 
         result += attenuation * (diffuse + specular);

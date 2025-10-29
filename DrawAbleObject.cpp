@@ -36,6 +36,15 @@ void DrawAbleObject::setParentSpace(DrawAbleObject* newParentSpace)
 	}
 }
 
+void DrawAbleObject::clearTransformation()
+{
+	if (this->transformations)
+	{
+		delete this->transformations;
+	}
+	transformations = new TransformationComposite();
+}
+
 
 void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
 {

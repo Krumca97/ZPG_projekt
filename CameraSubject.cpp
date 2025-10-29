@@ -9,7 +9,7 @@ CameraSubject::CameraSubject(glm::vec3 position,glm::quat orientation,glm::vec3 
    this->position = {0.f,1.7f,3.f};
    this->orientation = glm::quat(1.f,0.f,0.f,0.f);
    this->worldUp = {0.f,1.f,0.f};
-   this->fieldOfView = 60.f;
+   this->fieldOfView = 90.f;
    this->windowRatio = 4.f/3.f;
    this->nearPlane = 0.1f;
    this->farPlane = 100.f;

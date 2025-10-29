@@ -19,6 +19,8 @@ public:
 
 	void setParentSpace(DrawAbleObject* newParentSpace);	
 
+	void clearTransformation();
+
 	void draw(glm::mat4& view, glm::mat4& proj);
 
 private:

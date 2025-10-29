@@ -92,9 +92,20 @@ void ShaderProgram::onCameraChange(glm::mat4 view, glm::mat4 proj,glm::vec3 came
 
 void ShaderProgram::onLightChange(glm::vec3 position,glm::vec3 color,float intensity)
 {
-	lightPositions.push_back(position);
-    lightColors.push_back(color);
-    lightIntensities.push_back(intensity);
+	if (lightIndex < lightPositions.size())
+    {
+        lightPositions[lightIndex] = position;
+        lightColors[lightIndex] = color;
+        lightIntensities[lightIndex] = intensity;
+    }
+    else
+    {
+        lightPositions.push_back(position);
+        lightColors.push_back(color);
+        lightIntensities.push_back(intensity);
+    }
+
+    lightIndex++;
 }
 
 void ShaderProgram::setObjectColor(glm::vec3 color)
@@ -114,7 +125,20 @@ void ShaderProgram::uploadLights()
 {
     useShaderProgram();
 
+	int count = static_cast<int>(lightPositions.size());
+	if (count == 0)
+    {
+        glUniform1i(glGetUniformLocation(shaderProgramId, "lightCount"), 0);
+        return;
+    }
+
+    glUniform1i(glGetUniformLocation(shaderProgramId, "lightCount"), count);
     glUniform3fv(glGetUniformLocation(shaderProgramId, "lightPosition"),(GLsizei)lightPositions.size(), glm::value_ptr(lightPositions[0]));
     glUniform3fv(glGetUniformLocation(shaderProgramId, "lightColor"),(GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
     glUniform1fv(glGetUniformLocation(shaderProgramId, "lightIntensity"),(GLsizei)lightIntensities.size(), lightIntensities.data());
+}
+
+void ShaderProgram::setLightIndex(int lightIndex)
+{
+	this->lightIndex = lightIndex;
 }
