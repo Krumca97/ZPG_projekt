@@ -30,11 +30,11 @@ void main()
         float attenuation = 1.0 / (1.0 + 0.15 * distance + 0.24 * distance * distance);
 
         float diff = max(dot(norm, lightDir), 0.0);
-        vec3 diffuse = diff * lightColor[i] * lightIntensity[i] * objectColor;
+        vec3 diffuse = diff * lightColor[i] * lightIntensity[i] * objectColor * attenuation;
 
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-        vec3 specular = spec * lightColor[i] * lightIntensity[i];
+        vec3 specular = spec * lightColor[i] * lightIntensity[i] * attenuation;
 
         result += attenuation * (diffuse + specular);
     }

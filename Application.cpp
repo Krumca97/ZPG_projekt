@@ -477,8 +477,9 @@ void Application::buildScene()
 	LightSubject* sunLight = new LightSubject(
 		glm::vec3(0.f, 0.f, 0.f),
     	glm::vec3(0.7f, 0.8f, 1.f),
-    	1.f
+    	500.f
 	);
+	//sunLight->setParentSpace(objectSun);
 	scene4->addLight(sunLight);
 	scene4->addObject(objectSun);
 	scene4->addObject(objectEarth);
@@ -531,6 +532,10 @@ void Application::run()
 		{	
 			sceneActual->updateLights(1);
 			sceneActual->updateFireflies();
+		}
+		if (sceneNow == 4)
+		{	
+			sceneActual->updateLights(1);
 		}
 		else
 		{
