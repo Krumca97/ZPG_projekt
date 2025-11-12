@@ -25,7 +25,7 @@ bool ShaderProgram::link(Shader& vertexShader, Shader& fragmentShader)
 	fragmentShader.attachShader(this->shaderProgramId);
 	glLinkProgram(this->shaderProgramId);
 
-	//kontrola
+	//Check
 	GLint status;
 	glGetProgramiv(this->shaderProgramId, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
@@ -88,30 +88,49 @@ void ShaderProgram::onCameraChange(glm::mat4 view, glm::mat4 proj,glm::vec3 came
 	setUniform("viewMatrix",view);
 	setUniform("projectionMatrix",proj);
 	setUniform("viewPos", cameraPos);
+	
+	glUseProgram(0);
 }
 
-void ShaderProgram::onLightChange(glm::vec3 position,glm::vec3 color,float intensity)
+void ShaderProgram::onLightChange(glm::vec3 position,glm::vec3 color,float intensity,int type)
 {
-	if (lightIndex < lightPositions.size())
+
+    for (size_t i = 0; i < lightPositions.size(); ++i)
     {
-        lightPositions[lightIndex] = position;
-        lightColors[lightIndex] = color;
-        lightIntensities[lightIndex] = intensity;
-    }
-    else
-    {
-        lightPositions.push_back(position);
-        lightColors.push_back(color);
-        lightIntensities.push_back(intensity);
+        if (lightTypes[i] == type && glm::distance(lightPositions[i], position) < 0.01f)
+        {
+            lightPositions[i] = position;
+            lightColors[i] = color;
+            lightIntensities[i] = intensity;
+            return;
+        }
     }
 
-    lightIndex++;
+    lightPositions.push_back(position);
+    lightColors.push_back(color);
+    lightIntensities.push_back(intensity);
+    lightTypes.push_back(type);
+
+}
+
+void ShaderProgram::onSpotLightChange(glm::vec3 position, glm::vec3 direction,glm::vec3 color, float intensity)
+{
+    useShaderProgram();
+
+    setUniform("spotLightPosition", position);
+    setUniform("spotLightDirection", glm::normalize(direction));
+    setUniform("spotLightColor", color);
+    setUniform("spotLightIntensity", intensity);
+
+	glUseProgram(0);
+
 }
 
 void ShaderProgram::setObjectColor(glm::vec3 color)
 {
 	useShaderProgram();
     setUniform("objectColor", color);
+	glUseProgram(0);
 }
 
 void ShaderProgram::resetLight()
@@ -119,12 +138,13 @@ void ShaderProgram::resetLight()
 	this->lightPositions.clear();
     this->lightColors.clear();
     this->lightIntensities.clear();
+	this->lightTypes.clear();
+	this->lightIndex = 0;
 }
 
 void ShaderProgram::uploadLights()
 {
     useShaderProgram();
-
 	int count = static_cast<int>(lightPositions.size());
 	if (count == 0)
     {
@@ -136,6 +156,8 @@ void ShaderProgram::uploadLights()
     glUniform3fv(glGetUniformLocation(shaderProgramId, "lightPosition"),(GLsizei)lightPositions.size(), glm::value_ptr(lightPositions[0]));
     glUniform3fv(glGetUniformLocation(shaderProgramId, "lightColor"),(GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
     glUniform1fv(glGetUniformLocation(shaderProgramId, "lightIntensity"),(GLsizei)lightIntensities.size(), lightIntensities.data());
+	glUniform1iv(glGetUniformLocation(shaderProgramId, "lightType"), count, lightTypes.data());
+	glUseProgram(0);
 }
 
 void ShaderProgram::setLightIndex(int lightIndex)

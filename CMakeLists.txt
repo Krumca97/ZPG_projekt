@@ -23,6 +23,14 @@ set(SOURCES
     CameraSubject.cpp
     Controller.cpp
     LightSubject.cpp
+    Lights/AmbientLight.cpp
+    Lights/DirectionalLight.cpp
+    Lights/PointLight.cpp
+    Lights/SpotLight.cpp
+    Libraries/tiny_obj_loader.h
+    Material.cpp
+    Libraries/stb_image.h
+    TextureLoader.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

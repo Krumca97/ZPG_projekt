@@ -1,10 +1,12 @@
 #pragma once
 #include <GL/glew.h>
 #include <vector>
+#include <iostream>
 
 class Model {
 public:
-	Model(int jump, int positionSize, int color);
+	Model(int jump, int positionSize, int normal);
+	Model(const char* name);
 	void loadData(const std::vector<float>& newPoints);
 	void drawModel();
 
@@ -14,7 +16,7 @@ private:
 
 	int jump;
 	int positionSize;
-	int color;
+	int normal;
 
 	std::vector<float> points;
 

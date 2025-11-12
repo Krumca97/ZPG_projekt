@@ -19,7 +19,7 @@ CameraSubject::CameraSubject(glm::vec3 position,glm::quat orientation,glm::vec3 
 
 glm::mat4 CameraSubject:: getCamera()
 {
-    glm::mat4 rotation = glm::mat4_cast(orientation);   //z quartenionu na rotacni matici 
+    glm::mat4 rotation = glm::mat4_cast(orientation);   //from quartenions to rotation matrix
     glm::mat4 transaltion = glm::translate(glm::mat4(1.f), -position); 
 
     return glm::transpose(rotation) * transaltion;
@@ -113,6 +113,11 @@ void CameraSubject::setWindowRatio(float windowRatio)
 glm::vec3 CameraSubject::getPosition()
 {
     return this->position;
+}
+
+glm::vec3 CameraSubject::getFront()
+{
+    return glm::normalize(orientation * glm::vec3(0.0f, 0.0f, -1.0f));
 }
 
 void CameraSubject::setPosition(glm::vec3 position)

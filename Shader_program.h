@@ -25,7 +25,8 @@ public:
 	void update(glm::mat4 view, glm::mat4 proj);
 
 	void onCameraChange(glm::mat4 view,glm::mat4 proj,glm::vec3 cameraPos) override;
-	void onLightChange(glm::vec3 position, glm::vec3 color, float intensity) override;
+	void onLightChange(glm::vec3 position, glm::vec3 color, float intensity, int type) override;
+	void onSpotLightChange(glm::vec3 position, glm::vec3 direction,glm::vec3 color, float intensity) override;
 	void setObjectColor(glm::vec3 color) override;
 	void resetLight();
 	void uploadLights();
@@ -36,5 +37,6 @@ private:
 	std::vector<glm::vec3> lightPositions;
 	std::vector<glm::vec3> lightColors;
 	std::vector<float> lightIntensities;
+	std::vector<int> lightTypes;
 };
 

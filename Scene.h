@@ -4,6 +4,10 @@
 #include "LightSubject.h"
 #include "CameraSubject.h"
 #include "Controller.h"
+#include "Lights/AmbientLight.h"
+#include "Lights/DirectionalLight.h"
+#include "Lights/PointLight.h"
+#include "Lights/SpotLight.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include <ctime>
@@ -18,10 +22,18 @@ struct Firefly
     double lastUpdate;
 };
 
+enum class SceneLightType {
+    Ambient,
+    Point,
+    Directional,
+    Spot
+};
+
+
 class Scene
 {
 public:
-    Scene(glm::mat4& view,glm::mat4& proj);
+    Scene(glm::mat4& view,glm::mat4& proj,std::vector<SceneLightType> lights);
     ~Scene();
 
     void addObject(DrawAbleObject* object);
@@ -43,12 +55,20 @@ public:
 
     Controller* getController();
 
+    SpotLight* getSpotLight() { return spot; }
+
 private:
+    bool firefliesBuilt = false;
     glm::mat4 view;
     glm::mat4 proj;
 
     CameraSubject* camera = nullptr;
     Controller* controller = nullptr;
+
+    AmbientLight* ambient = nullptr;
+    PointLight* point = nullptr;
+    DirectionalLight* directional = nullptr;
+    SpotLight* spot = nullptr;
 
     std::vector<DrawAbleObject*> drawAbleObjects;
     std::vector<ShaderProgram*> shaderPrograms;

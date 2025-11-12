@@ -17,7 +17,7 @@
 #include "Controller.h"
 #include "LightSubject.h"
 
-//structura pro vytvoreni 20 objektu
+//structure for 20 objects
 struct ObjectGroup 
 {
     Shader* vertexShader;
@@ -42,21 +42,21 @@ private:
 
 	GLFWwindow* window = nullptr;
 
-	//fialovy trojuhelnik
+	//purple triangle
 	Shader* vertexShaderTrinagle = nullptr;
 	Shader* fragmentShaderTriangle = nullptr;
 	ShaderProgram* shaderTriangle = nullptr;
 	Model* modelTriangle = nullptr;
 	DrawAbleObject* objectTriangle = nullptr;
 
-	//Vytvoreni ctverece
+	//rectangle
 	Shader* vertexShaderRectangle = nullptr;
 	Shader* fragmentShaderRectangle = nullptr;
 	ShaderProgram* shaderRectangle = nullptr;
 	Model* modelRectangle = nullptr;
 	DrawAbleObject* objectRectangle = nullptr;
 
-	//Kulicky
+	//Spheres
 	Shader* vertexShaderSphere1 = nullptr;
 	Shader* fragmentShaderSphere1 = nullptr;
 	ShaderProgram* shaderSphere1 = nullptr;
@@ -75,21 +75,24 @@ private:
 	DrawAbleObject* object3Sphere = nullptr;
 	DrawAbleObject* object4Sphere = nullptr;
 
-	//Scena univerzal
+	//Scene univerzal
 	std::vector<ObjectGroup*> groupForScene4;
 	Shader* vertexShaderUniverzal = nullptr;
 	Shader* fragmentShaderUniverzal = nullptr;
 	ShaderProgram* shaderUniverzal = nullptr;
 	Model* modelUniverzal = nullptr;
 
-	//scena3
+	//scene3
 	std::vector<ObjectGroup*> groupForScene3;
 	Shader* vertexShaderSphereForest = nullptr;
 	Shader* fragmentShaderSphereForest = nullptr;
 	ShaderProgram* shaderSphereForest = nullptr;
+	Shader* vertexShaderPlaineForest = nullptr;
+	Shader* fragmentShaderPlainForest = nullptr;
+	ShaderProgram* shaderPlainForest = nullptr;
 	DrawAbleObject* objectForestSphere = nullptr;
 
-	//Slunecni soustava
+	//Solar system
 	Shader* vertexShaderSun = nullptr;
 	Shader* fragmentShaderSun = nullptr;
 	ShaderProgram* shaderSun = nullptr;
@@ -104,11 +107,48 @@ private:
 	DrawAbleObject* objectEarth = nullptr;
 	DrawAbleObject* objectMoon = nullptr; 
 
-	//Scena
+	//models from assests
+	//formula
+	Shader* vertexShaderFormula1Texture = nullptr;
+	Shader* fragmentShaderFormula1Texture = nullptr;
+	ShaderProgram* shaderFormula1Texture = nullptr;
+	Model* modelFormula1 = nullptr;
+	DrawAbleObject* formula1 = nullptr;
+	
+	//house
+	Shader* vertexShaderHouseTexture = nullptr;
+	Shader* fragmentShaderHouseTexture = nullptr;
+	ShaderProgram* shaderHouseTexture = nullptr;
+	Model* modelHouse = nullptr;
+	DrawAbleObject* house = nullptr;
+	
+	//shrek,fiona and toilet
+	Shader* vertexShaderShrekTexture = nullptr;
+	Shader* fragmentShaderShrekTexture = nullptr;
+	ShaderProgram* shaderShrekTexture = nullptr;
+	Model* modelShrek = nullptr;
+	DrawAbleObject* shrek = nullptr;
+
+	Shader* vertexShaderFionaTexture = nullptr;
+	Shader* fragmentShaderFionaTexture = nullptr;
+	ShaderProgram* shaderFionaTexture = nullptr;
+	Model* modelFiona = nullptr;
+	DrawAbleObject* fiona = nullptr;
+
+	Shader* vertexShaderToiletTexture = nullptr;
+	Shader* fragmentShaderToiletTexture = nullptr;
+	ShaderProgram* shaderToiletTexture = nullptr;
+	Model* modelToilet = nullptr;
+	DrawAbleObject* toilet = nullptr;
+
+	//Scene
 	Scene* scene1 = nullptr;
 	Scene* scene2 = nullptr;
 	Scene* scene3 = nullptr;
 	Scene* scene4 = nullptr;
+	Scene* scene5 = nullptr;
+	Scene* scene6 = nullptr;
+	Scene* scene7 = nullptr;
 	Scene* sceneActual = scene1;	
 
 	static void error_callback(int error, const char* description);

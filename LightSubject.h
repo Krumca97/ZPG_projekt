@@ -13,20 +13,22 @@ class LightSubject
     LightSubject(glm::vec3 position,glm::vec3 color,float intensity);
 
     void attach(IObserverLight* observer);
-    void notify();
+    virtual void notify();
     void addTransformation(TransformationComponent* transform);
     void clearTransformation();
     glm::vec3 getPosition();
     void setParentSpace(LightSubject* newParentSpace);
     
-private:
+protected:
     glm::vec3 position;
     glm::vec3 color;
     float intensity;
+    bool active = true;
+
     std::vector<IObserverLight*> shaderProgramsObservers;
     TransformationComposite* transformations;
     glm::mat4 combiMatrix();
-      LightSubject* parentSpace = nullptr;           
+    LightSubject* parentSpace = nullptr;           
     std::vector<LightSubject*> childrenSpace;      
 
 };

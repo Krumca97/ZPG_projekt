@@ -46,7 +46,7 @@ bool Shader::compileShader()
 	glShaderSource(this->shaderId, 1, &source, NULL);
 	glCompileShader(this->shaderId);
 
-	//kontrola
+	//Check
 	GLint status;
 	glGetShaderiv(this->shaderId, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE)

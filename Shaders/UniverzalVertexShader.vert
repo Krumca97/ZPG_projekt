@@ -11,9 +11,9 @@ out vec3 color;
 
 void main() 
 {
-    mat4 MVP = projectionMatrix * viewMatrix * modelMatrix;
+    mat4 PVM = projectionMatrix * viewMatrix * modelMatrix;
 
-    gl_Position = MVP * vec4(aPos, 1.0);
+    gl_Position = PVM * vec4(aPos, 1.0);
 
     color = normalize(aNormal) * 0.5 + 0.5;
 }

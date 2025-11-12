@@ -6,12 +6,34 @@
 #include "TransformationScale.h"
 #include "TransformationRotate.h"
 #include "TransformationComposite.h"
+#include <algorithm>
 
 
-Scene::Scene(glm::mat4& view,glm::mat4& proj)
+Scene::Scene(glm::mat4& view,glm::mat4& proj, std::vector<SceneLightType> lights)
 {
-    this->view= view;
+    this->view = view;
     this->proj = proj;
+
+    for (auto type : lights)
+    {
+        switch (type)
+        {
+            case SceneLightType::Point:
+                point = new PointLight(glm::vec3(3.0f, 2.0f, 2.0f),glm::vec3(1.0f, 0.9f, 0.8f),1.0f);
+                addLight(point);
+                break;
+
+            case SceneLightType::Directional:
+                directional = new DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f),glm::vec3(1.0f, 1.0f, 0.95f),1.2f);
+                addLight(directional);
+                break;
+
+            case SceneLightType::Spot:
+                spot = new SpotLight(glm::vec3(1.0f, 1.0f, 0.9f), 1.0f);
+                addLight(spot);
+                break;
+        }
+    }
 };
 
 Scene::~Scene(){};
@@ -20,7 +42,7 @@ void Scene::addObject(DrawAbleObject* object)
 {
     if(!object)
     {
-        printf("DrawAbleObjekt ukazuje na nullptr");
+        printf("DrawAbleObject points to nullptr");
         return;
     }
     else
@@ -33,7 +55,7 @@ void Scene::addShaderProgram(ShaderProgram* shaderProgram)
 {
     if(!shaderProgram)
     {
-        printf("Shader program ukazuje na nullptr");
+        printf("Shader program points to nullptr");
         return;
     }
     else
@@ -73,6 +95,12 @@ void Scene::updateLights(bool reset)
         }
     }
 
+    if (spot)
+    {
+        spot->notify();
+    }
+
+    int i = 0;
     for (auto* light : lights)
     {
         light->notify();
@@ -107,7 +135,7 @@ void Scene::buildFireflies(Model* model, ShaderProgram* shader,Scene* scene)
 		float z = -forestArea + 2.0f * forestArea * (std::rand() / (float)RAND_MAX);
 		glm::vec3 pos(x, y, z);
 		glm::vec3 color(1.0f, 0.9f, 0.7f);
-		float intensity = 0.2f + 0.2f * ((std::rand() % 10) / 10.0f);
+		float intensity = 0.2f;
 		fireflies.push_back(new LightSubject(pos, color, intensity));
 	}
 
@@ -189,6 +217,11 @@ void Scene::setCamera(float ratio)
         this->camera->attach(shader);
     }
     this->camera->notify();
+
+    if(spot)
+    {
+        spot->attachCamera(this->camera);
+    }
 }
 
 CameraSubject* Scene::getCamera()
@@ -210,6 +243,19 @@ void Scene::updateCamera(GLFWwindow* window, float deltaTime)
     for (auto* shader : shaderPrograms)
     {
         shader->onCameraChange(view, proj, camera->getPosition());
+    }
+
+    static bool f11Pressed = false;
+
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !f11Pressed)
+    {
+        spot->toggle();
+        spot->notify();
+        f11Pressed = true;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE)
+    {
+        f11Pressed = false;
     }
 }
 

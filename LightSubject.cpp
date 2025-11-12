@@ -15,6 +15,11 @@ void LightSubject::attach(IObserverLight* observer)
 
 void LightSubject::notify()
 {
+    if(!active)
+    {
+        return;
+    }
+
     glm::vec3 finalPos = position;
     if(transformations)
     {
@@ -24,7 +29,7 @@ void LightSubject::notify()
     
     for (IObserverLight* observer : shaderProgramsObservers)
     {
-        observer->onLightChange(finalPos, color, intensity);
+        observer->onLightChange(finalPos, color, intensity,1);
     }
 };
 
@@ -66,3 +71,4 @@ void LightSubject::setParentSpace(LightSubject* newParentSpace)
         this->parentSpace->childrenSpace.push_back(this);
     }
 }
+

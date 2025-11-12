@@ -29,6 +29,7 @@ public:
     void setWindowRatio(float windowRatio);
 
     glm::vec3 getPosition();
+    glm::vec3 getFront();
     void setPosition(glm::vec3 position);
     glm::mat4 getViewMatrix();
     glm::vec3 getForward();
