@@ -555,6 +555,7 @@ void Application::handleLeftClick()
             printf("GAME OVER! Ball was under cup %d\n", ballSlot + 1);
             printf("Final score = %d\n", score);
             gameOver = true;
+            score = 0;
         }
 
         waitingForGuess = false;

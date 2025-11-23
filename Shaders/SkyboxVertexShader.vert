@@ -8,7 +8,8 @@ uniform mat4 projectionMatrix;
 
 out vec3 fragmentLocalPosition;
 
-void main () {
+void main () 
+{
     mat4 viewNoTrans = mat4(mat3(viewMatrix));
 
     gl_Position = projectionMatrix * viewNoTrans* vec4(vp, 1.0);

@@ -20,5 +20,5 @@ void main()
     normalWorld = normalize(mat3(transpose(inverse(modelMatrix))) * aNormal);
     uv = aTexCoord;
 
-    gl_Position = projectionMatrix * viewMatrix* worldPos;
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
 }

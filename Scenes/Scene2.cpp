@@ -73,7 +73,7 @@ Scene* Scene2::Build(Application* app)
     directional->notify();
     scene->addLight(directional);
 
-    // Spotlight (camera-attached)
+    //Spotlight
     SpotLight* spot = scene->getSpotLight();
     spot->attach(sh4);
     spot->attachCamera(scene->getCamera());

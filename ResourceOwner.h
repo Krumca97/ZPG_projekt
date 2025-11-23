@@ -20,6 +20,7 @@ struct ObjectGroup
 class ResourceOwner
 {
 protected:
+	//helpry
     int objectId = 1;
     DrawAbleObject* createModelAndObjectFromFile(const std::string& file,ShaderProgram* shader)
     {

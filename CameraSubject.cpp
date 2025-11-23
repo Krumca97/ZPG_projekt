@@ -84,8 +84,14 @@ void CameraSubject::mouseDeltaMovement(float directionY,float directionX)
 
     pitch = glm::clamp(pitch, glm::radians(-89.0f), glm::radians(89.0f));
 
-    if (yaw > glm::two_pi<float>()) yaw -= glm::two_pi<float>();
-    if (yaw < 0) yaw += glm::two_pi<float>();
+    if (yaw > glm::two_pi<float>())
+    { 
+        yaw -= glm::two_pi<float>();
+    }
+    if (yaw < 0)
+    { 
+        yaw += glm::two_pi<float>();
+    }
 
     updateVectors();
     notify();
