@@ -1,3 +1,0 @@
-/home/ales/Codding/ZPG/ZPG_projekt/build/CMakeFiles/Projekt.dir
-/home/ales/Codding/ZPG/ZPG_projekt/build/CMakeFiles/edit_cache.dir
-/home/ales/Codding/ZPG/ZPG_projekt/build/CMakeFiles/rebuild_cache.dir
