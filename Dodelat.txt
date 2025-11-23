@@ -1,3 +1,0 @@
-1. predelat abientni slozku v phong shaderu na (Ia jako vec3 a ra je v poradku jako object color);
-2.phong vertex shader world pos nesmim zahodit tu 4 slozku !!! upravit 
-3.worldPos = vec4(pos.x/w(ctvrta slozka), pos.y /w , pos.z / w)
