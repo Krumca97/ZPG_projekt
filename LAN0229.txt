@@ -1,7 +1,0 @@
-Svetlusky Scena3
------------------
-Svetlusky vytvarim ve Scene pomoci metody BuildFireflies, kde nazacatku jsem urcil ze jich bude 8 a omezil jsem jim pohyb po scene.
-Kazde svetlusce nastavim nahodnou pozici v prostoru,barvu,utlum(ktery je konstni v shaderu) a intenzitu, kde nakonec vsechny tyto informace ulozim do vektoru pro svetlusky.
-Co se vzhledu tyce tak, je kazda svetluska vyobrazena jako mala kulicka z modelu Sphere, ktere se umisti presne na stejne souradnice jako jsem vytvoril svetlo.
-Pohyb svetlusek je reseny opet nahodne a v metode UpdateFireflies se tento nahodny pohyb pricita a tim se svetuska pohybuje.
-Nakonec se vsechno ulozi do vektoru fireFliesData(objekt,svetlo,pozice,pohyb a casy pro pohyb) a metoda updateFireflies je volana kazdy frame ve smyce run.
