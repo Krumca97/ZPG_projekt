@@ -49,6 +49,10 @@ void DrawAbleObject::clearTransformation()
 
 void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
 {
+	if(!visible)
+	{
+		return;
+	}
 	glm::mat4 matrix = combiMatrix();
 	shaderProgram.useShaderProgram();
     shaderProgram.setUniform("modelMatrix", matrix);
@@ -73,6 +77,19 @@ void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
 	glUseProgram(0);
 }
 
+void DrawAbleObject::drawStencil(ShaderProgram& shader, glm::mat4& view, glm::mat4& proj)
+{
+    shader.useShaderProgram();
+
+    glm::mat4 matrix = combiMatrix();
+
+    shader.setUniform("modelMatrix", matrix);
+    shader.setUniform("viewMatrix", view);
+    shader.setUniform("projectionMatrix", proj);
+
+    model.drawModel();
+}
+
 void DrawAbleObject::setMaterial(const Material& mat)
 {
 	this->material = mat;
@@ -95,4 +112,24 @@ void DrawAbleObject::setTexture(GLuint texID)
 void DrawAbleObject::setUvScale(float scale)
 {
 	this->uvScale = scale;
+}
+
+void DrawAbleObject::setId(int id)
+{
+	this->id = id;
+}
+
+int DrawAbleObject::getId()
+{
+	return this->id;
+}
+
+void DrawAbleObject::setVisible(bool visible)
+{
+	this->visible = visible;
+}
+
+Model* DrawAbleObject::getModel()
+{
+    return &model;
 }

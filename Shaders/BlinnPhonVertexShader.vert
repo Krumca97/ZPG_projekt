@@ -10,7 +10,10 @@ out vec3 fragPos;
 out vec3 normal;
 
 void main() {
-    fragPos = vec3(modelMatrix * vec4(aPos, 1.0));
-    normal = aNormal;
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPos, 1.0);
+    vec4 worldPos = modelMatrix * vec4(aPos,1.0);
+    fragPos= worldPos.xyz / worldPos.w;
+
+    normal = normalize(mat3(transpose(inverse(modelMatrix))) * aNormal);
+
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
 }

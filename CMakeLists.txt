@@ -15,11 +15,11 @@ set(SOURCES
     Shader.cpp
     Model.cpp
     Scene.cpp
-    TransformationComponent.h
-    TransformationRotate.cpp
-    TransformationScale.cpp
-    TransformationTranslate.cpp
-    TransformationComposite.cpp
+    Transformations/TransformationComponent.h
+    Transformations/TransformationRotate.cpp
+    Transformations/TransformationScale.cpp
+    Transformations/TransformationTranslate.cpp
+    Transformations/TransformationComposite.cpp
     CameraSubject.cpp
     Controller.cpp
     LightSubject.cpp
@@ -31,6 +31,16 @@ set(SOURCES
     Material.cpp
     Libraries/stb_image.h
     TextureLoader.cpp
+    Skybox.cpp
+    Transformations/TransformationCustom.cpp
+    Transformations/TransformationPath.cpp
+    Scenes/Scene1.cpp
+    Scenes/Scene2.cpp
+    Scenes/Scene3.cpp
+    Scenes/Scene4.cpp
+    Scenes/Scene5.cpp
+    Scenes/Scene6.cpp
+    Scenes/Scene7.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

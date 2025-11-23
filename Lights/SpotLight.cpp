@@ -19,7 +19,7 @@ void SpotLight::notify()
 
     if (camera)
     {
-        finalDirection = glm::normalize(camera->getFront() - glm::vec3(0.0f, 0.15f, 0.0f));
+        finalDirection = glm::normalize(camera->getForward() - glm::vec3(0.0f, 0.15f, 0.0f));
         finalPosition = camera->getPosition() + finalDirection * 0.4f; 
     }
 

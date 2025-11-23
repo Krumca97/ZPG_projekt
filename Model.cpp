@@ -22,8 +22,8 @@ Model::Model(const char* name)
 
 	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.c_str(), "../../Assets/");
 
-    if (!warn.empty()) std::cout << "Warn: " << warn << std::endl;
-    if (!err.empty()) std::cerr << "Err: " << err << std::endl;
+    // if (!warn.empty()) std::cout << "Warn: " << warn << std::endl;
+    // if (!err.empty()) std::cerr << "Err: " << err << std::endl;
     if (!ret) throw std::runtime_error("Failed to load OBJ file!");
 
     std::vector<float> vertices;

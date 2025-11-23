@@ -16,130 +16,67 @@
 #include "CameraSubject.h"
 #include "Controller.h"
 #include "LightSubject.h"
+#include "Transformations/TransformationPath.h"
+#include "Transformations/TransformationTranslate.h"
+#include "ResourceOwner.h"
 
-//structure for 20 objects
-struct ObjectGroup 
+class Application : public ResourceOwner
 {
-    Shader* vertexShader;
-	Shader* fragmentShader;
-    ShaderProgram* shader;
-    Model* model;
-    std::vector<DrawAbleObject*> objects;
-    std::string name;
-};
-
-class Application 
-{
+	friend class Scene1;
+	friend class Scene2;
+	friend class Scene3;
+	friend class Scene4;
+	friend class Scene5;
+	friend class Scene6;
+	friend class Scene7;
 public:
 	void check();
 	bool initialization();
+	bool initGLFW();
+	void initCallbacks();
+	void onResize(int width, int height);
+	void onMouseMove(double x, double y);
+	void onMouseButton(int button, int action, int mods);
+	void onKey(int key, int action, int mods);
+	void moveObjectUnderCursor(double mx, double my);
+	void handleLeftClick();
 	void createShaders();
 	void createBuffers();
 	void buildScene();
 	void run();
 
+	int sceneNow = 1;
+	bool isObjectMoving();
+    DrawAbleObject* getMovingObject();
 private:
-
 	GLFWwindow* window = nullptr;
 
-	//purple triangle
-	Shader* vertexShaderTrinagle = nullptr;
-	Shader* fragmentShaderTriangle = nullptr;
-	ShaderProgram* shaderTriangle = nullptr;
-	Model* modelTriangle = nullptr;
-	DrawAbleObject* objectTriangle = nullptr;
+	//Shell game
+	bool mixing = false;
+	float mixTime = 0.0f;
+	int ballSlot = 0; 
+	int score = 0;
+	bool gameOver = false;
+	bool waitingForGuess = false;
 
-	//rectangle
-	Shader* vertexShaderRectangle = nullptr;
-	Shader* fragmentShaderRectangle = nullptr;
-	ShaderProgram* shaderRectangle = nullptr;
-	Model* modelRectangle = nullptr;
-	DrawAbleObject* objectRectangle = nullptr;
+	DrawAbleObject* cup1 = nullptr;
+	DrawAbleObject* cup2 = nullptr;
+	DrawAbleObject* cup3 = nullptr;
+	TransformationPath* path1 = nullptr;
+	TransformationPath* path2 = nullptr;
+	TransformationPath* path3 = nullptr;
+	TransformationComposite* transCup1 = nullptr;
+	TransformationComposite* transCup2 = nullptr;
+	TransformationComposite* transCup3 = nullptr;
 
-	//Spheres
-	Shader* vertexShaderSphere1 = nullptr;
-	Shader* fragmentShaderSphere1 = nullptr;
-	ShaderProgram* shaderSphere1 = nullptr;
-	Shader* vertexShaderSphere2 = nullptr;
-	Shader* fragmentShaderSphere2 = nullptr;
-	ShaderProgram* shaderSphere2 = nullptr;
-	Shader* vertexShaderSphere3 = nullptr;
-	Shader* fragmentShaderSphere3 = nullptr;
-	ShaderProgram* shaderSphere3 = nullptr;
-	Shader* vertexShaderSphere4 = nullptr;
-	Shader* fragmentShaderSphere4 = nullptr;
-	ShaderProgram* shaderSphere4 = nullptr;
-	Model* modelSphere = nullptr;
-	DrawAbleObject* object1Sphere = nullptr;
-	DrawAbleObject* object2Sphere = nullptr;
-	DrawAbleObject* object3Sphere = nullptr;
-	DrawAbleObject* object4Sphere = nullptr;
+	TransformationTranslate* liftCup1;
+	TransformationTranslate* liftCup2;
+	TransformationTranslate* liftCup3;
+	TransformationTranslate* ballTranslate = nullptr;
 
-	//Scene univerzal
-	std::vector<ObjectGroup*> groupForScene4;
-	Shader* vertexShaderUniverzal = nullptr;
-	Shader* fragmentShaderUniverzal = nullptr;
-	ShaderProgram* shaderUniverzal = nullptr;
-	Model* modelUniverzal = nullptr;
-
-	//scene3
-	std::vector<ObjectGroup*> groupForScene3;
-	Shader* vertexShaderSphereForest = nullptr;
-	Shader* fragmentShaderSphereForest = nullptr;
-	ShaderProgram* shaderSphereForest = nullptr;
-	Shader* vertexShaderPlaineForest = nullptr;
-	Shader* fragmentShaderPlainForest = nullptr;
-	ShaderProgram* shaderPlainForest = nullptr;
-	DrawAbleObject* objectForestSphere = nullptr;
-
-	//Solar system
-	Shader* vertexShaderSun = nullptr;
-	Shader* fragmentShaderSun = nullptr;
-	ShaderProgram* shaderSun = nullptr;
-	Shader* vertexShaderEarth = nullptr;
-	Shader* fragmentShaderEarth = nullptr;
-	ShaderProgram* shaderEarth = nullptr;  
-	Shader* vertexShaderMoon = nullptr;
-	Shader* fragmentShaderMoon = nullptr;
-	ShaderProgram* shaderMoon = nullptr;
-	Model* modelSolarSystem = nullptr;
-	DrawAbleObject* objectSun = nullptr;
-	DrawAbleObject* objectEarth = nullptr;
-	DrawAbleObject* objectMoon = nullptr; 
-
-	//models from assests
-	//formula
-	Shader* vertexShaderFormula1Texture = nullptr;
-	Shader* fragmentShaderFormula1Texture = nullptr;
-	ShaderProgram* shaderFormula1Texture = nullptr;
-	Model* modelFormula1 = nullptr;
-	DrawAbleObject* formula1 = nullptr;
-	
-	//house
-	Shader* vertexShaderHouseTexture = nullptr;
-	Shader* fragmentShaderHouseTexture = nullptr;
-	ShaderProgram* shaderHouseTexture = nullptr;
-	Model* modelHouse = nullptr;
-	DrawAbleObject* house = nullptr;
-	
-	//shrek,fiona and toilet
-	Shader* vertexShaderShrekTexture = nullptr;
-	Shader* fragmentShaderShrekTexture = nullptr;
-	ShaderProgram* shaderShrekTexture = nullptr;
-	Model* modelShrek = nullptr;
-	DrawAbleObject* shrek = nullptr;
-
-	Shader* vertexShaderFionaTexture = nullptr;
-	Shader* fragmentShaderFionaTexture = nullptr;
-	ShaderProgram* shaderFionaTexture = nullptr;
-	Model* modelFiona = nullptr;
-	DrawAbleObject* fiona = nullptr;
-
-	Shader* vertexShaderToiletTexture = nullptr;
-	Shader* fragmentShaderToiletTexture = nullptr;
-	ShaderProgram* shaderToiletTexture = nullptr;
-	Model* modelToilet = nullptr;
-	DrawAbleObject* toilet = nullptr;
+	bool lifted1 = false;
+	bool lifted2 = false;
+	bool lifted3 = false;
 
 	//Scene
 	Scene* scene1 = nullptr;
@@ -151,8 +88,17 @@ private:
 	Scene* scene7 = nullptr;
 	Scene* sceneActual = scene1;	
 
+	bool isMovingObject = false;
+	bool plantingMode = false;
+	DrawAbleObject* movingObject = nullptr;
+
 	static void error_callback(int error, const char* description);
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	void switchScene(int scene);
+	void toggleFullscreen(GLFWwindow* window);
+	void toggleMoveMode();
+	void togglePlantingMode();
+	void restartShellGame();
 	static void window_focus_callback(GLFWwindow* window, int focused);
 	static void window_iconify_callback(GLFWwindow* window, int iconified);
 	static void window_size_callback(GLFWwindow* window, int width, int height);

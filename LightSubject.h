@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "IObserverLight.h"
-#include "TransformationComposite.h"
+#include "Transformations/TransformationComposite.h"
 #include <glm/glm.hpp>
 #include <vector>
 

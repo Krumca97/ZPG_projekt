@@ -11,6 +11,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <ctime>
+#include "Skybox.h"
 
 struct Firefly 
 {
@@ -33,9 +34,9 @@ enum class SceneLightType {
 class Scene
 {
 public:
-    Scene(glm::mat4& view,glm::mat4& proj,std::vector<SceneLightType> lights);
+    Scene(glm::mat4& view,glm::mat4& proj,std::vector<SceneLightType> lights,bool skyboxSky);
     ~Scene();
-
+    void init();
     void addObject(DrawAbleObject* object);
     void addShaderProgram(ShaderProgram* shaderProgram);
     void addLight(LightSubject* light);
@@ -45,6 +46,7 @@ public:
     
     void updateLights(bool reset);
     void drawScene();
+    void drawSceneStencil();
 
     void buildFireflies(Model* model, ShaderProgram* shader,Scene* scene);
     void updateFireflies();
@@ -56,7 +58,13 @@ public:
     Controller* getController();
 
     SpotLight* getSpotLight() { return spot; }
+    void selectObjectById(unsigned int id);
+    void setSelect(int id);
+    DrawAbleObject* getSelected() const;
 
+    void plantTree(const glm::vec3& worldPos);
+    ShaderProgram* getTreeShader() const { return shaderTree; }
+    Material& getTreeMaterial() { return treeMaterial; }
 private:
     bool firefliesBuilt = false;
     glm::mat4 view;
@@ -75,4 +83,16 @@ private:
     std::vector<LightSubject*> lights;
     std::vector<LightSubject*> fireflies;
     std::vector<Firefly> firefliesData;
+
+    Skybox* skybox = nullptr;
+    ShaderProgram* skyboxShaderProgram = nullptr;
+    ShaderProgram* stencilShaderProgram = nullptr;
+    DrawAbleObject* selectedObject = nullptr;
+
+    Model* modelTree = nullptr;
+    ShaderProgram* shaderTree = nullptr;
+    Material treeMaterial = Material(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 32.0f);
+
+    int nextId = 10000;
+    bool skyboxStars = 0;
 };

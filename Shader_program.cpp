@@ -88,7 +88,6 @@ void ShaderProgram::onCameraChange(glm::mat4 view, glm::mat4 proj,glm::vec3 came
 	setUniform("viewMatrix",view);
 	setUniform("projectionMatrix",proj);
 	setUniform("viewPos", cameraPos);
-	
 	glUseProgram(0);
 }
 

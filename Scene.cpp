@@ -2,17 +2,68 @@
 #include <GLFW/glfw3.h>
 #include "Scene.h"
 #include <time.h>
-#include "TransformationTranslate.h"
-#include "TransformationScale.h"
-#include "TransformationRotate.h"
-#include "TransformationComposite.h"
+#include "Transformations/TransformationTranslate.h"
+#include "Transformations/TransformationScale.h"
+#include "Transformations/TransformationRotate.h"
+#include "Transformations/TransformationComposite.h"
 #include <algorithm>
+#include "Models/tree.h"
+#include "Application.h"
 
 
-Scene::Scene(glm::mat4& view,glm::mat4& proj, std::vector<SceneLightType> lights)
+Scene::Scene(glm::mat4& view,glm::mat4& proj, std::vector<SceneLightType> lights,bool skyboxSky)
 {
     this->view = view;
     this->proj = proj;
+    this->skyboxShaderProgram = new ShaderProgram();
+    this->skyboxStars = skyboxSky;
+
+    if(this->skyboxStars)
+    {
+        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert",GL_VERTEX_SHADER);
+        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag",GL_FRAGMENT_SHADER);
+        this->skyboxShaderProgram->link(skyboxVertexShader, skyboxFragmentShader);
+        skybox = new Skybox(skyboxShaderProgram,
+            {
+                "../../Textures/Skybox/px.png",
+                "../../Textures/Skybox/nx.png",
+                "../../Textures/Skybox/py.png",
+                "../../Textures/Skybox/ny.png",
+                "../../Textures/Skybox/pz.png",
+                "../../Textures/Skybox/nz.png"
+            }
+        );
+    }
+    else
+    {
+        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert",GL_VERTEX_SHADER);
+        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag",GL_FRAGMENT_SHADER);
+        this->skyboxShaderProgram->link(skyboxVertexShader, skyboxFragmentShader);
+        skybox = new Skybox(skyboxShaderProgram,
+            {
+                "../../Textures/Skybox/posx.jpg",
+                "../../Textures/Skybox/negx.jpg",
+                "../../Textures/Skybox/posy.jpg",
+                "../../Textures/Skybox/negy.jpg",
+                "../../Textures/Skybox/posz.jpg",
+                "../../Textures/Skybox/negz.jpg"
+            }
+        );
+    }
+
+    stencilShaderProgram = new ShaderProgram();
+    Shader stencilVektorShader("../../Shaders/UniverzalVertexShader.vert", GL_VERTEX_SHADER);
+    Shader stencilFragmentShader("../../Shaders/UniverzalFragmentShader.frag", GL_FRAGMENT_SHADER);
+    stencilShaderProgram->link(stencilVektorShader, stencilFragmentShader);
+
+    modelTree = new Model(6, 3, 3);
+    std::vector<float> treeVerts(tree, tree + sizeof(tree) / sizeof(float));
+    modelTree->loadData(treeVerts);
+
+    shaderTree = new ShaderProgram();
+    Shader treeVektorShader("../../Shaders/PhongVertexShader.vert", GL_VERTEX_SHADER);
+    Shader treeFragmentShader("../../Shaders/PhongFragmentShader.frag", GL_FRAGMENT_SHADER);
+    shaderTree->link(treeVektorShader, treeFragmentShader);
 
     for (auto type : lights)
     {
@@ -114,11 +165,43 @@ void Scene::updateLights(bool reset)
 
 void Scene::drawScene()
 {
+    glStencilMask(0x00);
     for (auto& object : drawAbleObjects)
     {
         object->draw(view,proj);
     }
+    skybox->draw(view, proj);
+    glStencilMask(0xFF); 
 }
+
+void Scene::drawSceneStencil()
+{
+    glEnable(GL_STENCIL_TEST);
+
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glDepthMask(GL_FALSE);
+    
+    Application* app = static_cast<Application*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
+
+    for (DrawAbleObject* obj : drawAbleObjects)
+    {
+        if (app && app->isObjectMoving() && app->getMovingObject() == obj)
+        {
+            continue;
+        }
+
+        glStencilFunc(GL_ALWAYS, obj->getId(), 0xFF);
+        obj->drawStencil(*stencilShaderProgram, view, proj);
+    }
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_TRUE);
+    glDisable(GL_STENCIL_TEST);
+}
+
 
 void Scene::buildFireflies(Model* model, ShaderProgram* shader,Scene* scene) 
 {
@@ -204,12 +287,7 @@ void Scene::updateFireflies()
 
 void Scene::setCamera(float ratio)
 {
-    this->camera = new CameraSubject(
-        glm::vec3(0.f, 1.7f, 3.f),
-        glm::quat(1.f, 0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        60.f, ratio, 0.1f, 100.f, 2.5f, 0.1f
-    );
+    this->camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f),-90.0f,0.0f,60.f,ratio,0.1f,100.f,3.f,0.003f);
     this->controller = new Controller(this->camera);
 
     for (auto* shader : shaderPrograms)
@@ -237,7 +315,7 @@ void Scene::updateCamera(GLFWwindow* window, float deltaTime)
     }
     this->controller->processKeyboard(window, deltaTime);
 
-    view = this->camera->getCamera();
+    view = this->camera->getViewMatrix();
     proj = this->camera->projectionMatrix();
 
     for (auto* shader : shaderPrograms)
@@ -257,9 +335,51 @@ void Scene::updateCamera(GLFWwindow* window, float deltaTime)
     {
         f11Pressed = false;
     }
+    glm::vec3 pos = camera->getPosition();
 }
 
 Controller* Scene::getController()
 {
     return this->controller;
 }
+
+void Scene::setSelect(int id)
+{
+    selectedObject = nullptr;
+
+    for (DrawAbleObject* obj : this->drawAbleObjects)
+    {
+        if (obj->getId() == id)
+        {
+            selectedObject = obj;
+            return;
+        }
+    }
+
+}
+
+DrawAbleObject* Scene::getSelected() const
+{
+     return selectedObject;
+}
+
+void Scene::plantTree(const glm::vec3& worldPos)
+{
+    DrawAbleObject* newTree = new DrawAbleObject(*modelTree, *shaderTree);
+    newTree->setMaterial(treeMaterial);
+
+    newTree->setId(this->nextId++);
+    shaderTree->setObjectColor(glm::vec3(0.0f, 1.0f, 0.0f));
+    TransformationComposite* trans = new TransformationComposite();
+    trans->addTransformation(new TransformationTranslate(worldPos, 1.0f));
+    trans->addTransformation(new TransformationScale(glm::vec3(1.0f), 0.0f));
+    newTree->addTransformation(trans);
+
+    this->drawAbleObjects.push_back(newTree);
+
+    for (LightSubject* light : this->lights)
+    {
+        light->notify();
+    }
+}
+

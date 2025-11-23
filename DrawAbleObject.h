@@ -4,7 +4,7 @@
 #include <memory>
 #include "Model.h"
 #include "Shader_program.h"
-#include "TransformationComposite.h"
+#include "Transformations/TransformationComposite.h"
 #include <vector>
 #include "Material.h"
 
@@ -23,11 +23,17 @@ public:
 	void clearTransformation();
 
 	void draw(glm::mat4& view, glm::mat4& proj);
+	void drawStencil(ShaderProgram& shader, glm::mat4& view, glm::mat4& proj);
 
 	void setMaterial(const Material& material);
 	void uploadMaterial();
 	void setTexture(GLuint texID);
 	void setUvScale(float scale);
+
+	void setId(int id);
+	int getId();
+	void setVisible(bool visible);
+	Model* getModel();
 
 private:
 	Model& model;
@@ -40,4 +46,6 @@ private:
 	GLuint textureID = 0;
 	bool useTexture = false;
 	float uvScale = 1.0f;
+	int id;
+	bool visible = true;
 };

@@ -12,7 +12,7 @@ Controller::Controller(CameraSubject* camera)
 
 void Controller::processKeyboard(GLFWwindow* window, float deltaTime)
 {
-    float velocity = camera->getCameraSpeed() * deltaTime*2;
+    float velocity =camera->getCameraSpeed()  * deltaTime;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -65,7 +65,7 @@ void Controller::processMouse(GLFWwindow* window, float xPos, float yPos)
     lastX = xPos;
     lastY = yPos;
 
-    camera->mouseDeltaMovement(yOffset, -xOffset);
+    camera->mouseDeltaMovement(yOffset, xOffset);
 }
 
 void Controller::setMouseEnabled(bool enabled)
