@@ -14,11 +14,17 @@ struct Material {
     float h;
 };
 
+struct Light {
+    int type;
+    vec3 position;
+    vec3 direction;
+    vec3 color;
+    float intensity;
+    float angle;
+};
+
 uniform Material material;
-uniform vec3 lightPosition[maxLight];
-uniform vec3 lightColor[maxLight];
-uniform float lightIntensity[maxLight];
-uniform int lightType[maxLight];
+uniform Light lights[maxLight];
 uniform int lightCount;
 uniform vec3 objectColor;
 uniform mat4 viewMatrix;
@@ -28,10 +34,6 @@ uniform vec3 viewPos;
 uniform sampler2D textureUnitID;
 uniform bool useTexture;
 uniform float uvScale;
-uniform vec3 spotLightPosition;
-uniform vec3 spotLightDirection;
-uniform vec3 spotLightColor;
-uniform float spotLightIntensity;
 
 float attenuation(float distance, float constant, float linear, float quadratic)
 {
@@ -56,15 +58,21 @@ void main()
 
     for (int i = 0; i < lightCount; i++)
     {
+        if(lights[i].type == 2)
+        {
+            result += material.ra * baseColor * lights[i].color * lights[i].intensity;
+            continue;
+        }
+
         vec3 lightDir;
         float att = 1;
         vec3 diffuse = vec3(0.0); 
         vec3 specular = vec3(0.0); 
 
-        if(lightType[i] == 1)
+        if(lights[i].type == 1)
         {
-            lightDir = normalize(lightPosition[i] - fragPosWorld);
-            float distance = length(lightPosition[i] - fragPosWorld);
+            lightDir = normalize(lights[i].position - fragPosWorld);
+            float distance = length(lights[i].position - fragPosWorld);
             att = attenuation(distance, 1.0, 0.22, 0.20);
 
             float diff = max(dot(norm, lightDir), 0.0);
@@ -72,53 +80,54 @@ void main()
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.h);
             if (dot(norm, lightDir) < 0.0) spec = 0.0;
 
-            diffuse = material.rd * diff * lightColor[i] * baseColor;
-            specular = material.rs * spec * lightColor[i];
+            diffuse = material.rd * diff * lights[i].color * baseColor;
+            specular = material.rs * spec * lights[i].color;
+
+            result += (diffuse + specular) * lights[i].intensity * att;
         }
-        else if(lightType[i] == 0)
+        else if(lights[i].type == 0)
         {
-            lightDir = normalize(-lightPosition[i]);
+            lightDir = normalize(-lights[i].position);
 
             float diff = max(dot(norm, lightDir), 0.0);
             vec3 reflectDir = reflect(-lightDir, norm);
             float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.h);
             if (dot(norm, lightDir) < 0.0) spec = 0.0;
 
-            diffuse = material.rd * diff * lightColor[i] * baseColor;
-            specular = material.rs *0.03* spec * lightColor[i];
+            diffuse = material.rd * diff * lights[i].color * baseColor;
+            specular = material.rs *0.03* spec * lights[i].color;
+
+            result += (diffuse + specular) * lights[i].intensity * att;
         }
-        else if(lightType[i] == 2)
+        
+        if (lights[i].type == 3)   // SPOT LIGHT
         {
-            result += material.ra * baseColor * lightColor[i] * lightIntensity[i];
-            continue;
-        }
+            if (lights[i].intensity <= 0.001)
+            {    
+                continue;
+            }
+            vec3 lightToFrag = normalize(fragPosWorld - lights[i].position);
+            float LF = dot(lightToFrag, lights[i].direction);
 
-        result += (diffuse + specular) * lightIntensity[i] * att;
-    }
+            float cutOff = cos(radians(40.0));
+            float intens = (LF - cutOff) / (1.0 - cutOff);
+            intens = clamp(intens, 0.0, 1.0);
 
-    if (spotLightIntensity > 0.001)
-    {
-        vec3 lightToFrag = normalize(fragPosWorld - spotLightPosition);
-        float LF = dot(lightToFrag, spotLightDirection);
+            if (intens > 0.0)
+            {
+                float distance = length(lights[i].position - fragPosWorld);
+                float att = attenuation(distance, 1.0, 0.14, 0.07);
 
-        float cutOff = cos(radians(40.0));
-        float intens = (LF - cutOff) / (1.0 - cutOff);
-        intens = clamp(intens, 0.0, 1.0);
+                vec3 lightDir = normalize(lights[i].position - fragPosWorld);
+                float diff = max(dot(norm, lightDir), 0.0);
+                vec3 reflectDir = reflect(-lightDir, norm);
+                float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.h);
 
-        if (intens > 0.0)
-        {
-            float distance = length(spotLightPosition - fragPosWorld);
-            float att = attenuation(distance, 1.0, 0.14, 0.07);
+                vec3 diffuse = material.rd * diff * lights[i].color * baseColor;
+                vec3 specular = material.rs * spec * lights[i].color * baseColor;
 
-            vec3 lightDir = normalize(spotLightPosition - fragPosWorld);
-            float diff = max(dot(norm, lightDir), 0.0);
-            vec3 reflectDir = reflect(-lightDir, norm);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.h);
-
-            vec3 diffuse = material.rd * diff * spotLightColor * baseColor;
-            vec3 specular = material.rs * spec * spotLightColor * baseColor;
-
-            result += (diffuse + specular) * att * intens * spotLightIntensity;
+                result += (diffuse + specular) * att * intens * lights[i].intensity;
+            }
         }
     }
     result = clamp(result, 0.0, 1.0);

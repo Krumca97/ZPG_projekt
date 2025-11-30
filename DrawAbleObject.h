@@ -11,21 +11,21 @@
 class DrawAbleObject
 {
 public:
-	DrawAbleObject(Model& model, ShaderProgram& shader_program);
-	~DrawAbleObject() =default;
-	DrawAbleObject(DrawAbleObject&) = delete;
-    DrawAbleObject& operator=(DrawAbleObject&) = delete;
+	DrawAbleObject(Model &model, ShaderProgram &shader_program);
+	~DrawAbleObject() = default;
+	DrawAbleObject(DrawAbleObject &) = delete;
+	DrawAbleObject &operator=(DrawAbleObject &) = delete;
 
-	void addTransformation(TransformationComponent* transformation);
+	void addTransformation(TransformationComponent *transformation);
 
-	void setParentSpace(DrawAbleObject* newParentSpace);	
+	void setParentSpace(DrawAbleObject *newParentSpace);
 
 	void clearTransformation();
 
-	void draw(glm::mat4& view, glm::mat4& proj);
-	void drawStencil(ShaderProgram& shader, glm::mat4& view, glm::mat4& proj);
+	void draw(glm::mat4 &view, glm::mat4 &proj);
+	void drawStencil(ShaderProgram &shader, glm::mat4 &view, glm::mat4 &proj);
 
-	void setMaterial(const Material& material);
+	void setMaterial(const Material &material);
 	void uploadMaterial();
 	void setTexture(GLuint texID);
 	void setUvScale(float scale);
@@ -33,15 +33,15 @@ public:
 	void setId(int id);
 	int getId();
 	void setVisible(bool visible);
-	Model* getModel();
+	Model *getModel();
 
 private:
-	Model& model;
-	ShaderProgram& shaderProgram;
-	TransformationComposite* transformations;
+	Model &model;
+	ShaderProgram &shaderProgram;
+	TransformationComposite *transformations;
 	glm::mat4 combiMatrix();
-	DrawAbleObject* parentSpace = nullptr;
-	std::vector<DrawAbleObject*> childrenSpace;
+	DrawAbleObject *parentSpace = nullptr;
+	std::vector<DrawAbleObject *> childrenSpace;
 	Material material;
 	GLuint textureID = 0;
 	bool useTexture = false;

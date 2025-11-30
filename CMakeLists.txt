@@ -41,6 +41,8 @@ set(SOURCES
     Scenes/Scene5.cpp
     Scenes/Scene6.cpp
     Scenes/Scene7.cpp
+    Transformations/TransformationBezier.cpp
+    Scenes/Scene8.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

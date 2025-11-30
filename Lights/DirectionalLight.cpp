@@ -4,8 +4,8 @@ DirectionalLight::DirectionalLight(glm::vec3 direction, glm::vec3 color, float i
 
 void DirectionalLight::notify()
 {
-    for (IObserverLight* observer : shaderProgramsObservers)
+    for (IObserverLight *observer : shaderProgramsObservers)
     {
-        observer->onLightChange(direction, color, intensity,0);
+        observer->onLightChange(direction, color, intensity, 0);
     }
 }

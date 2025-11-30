@@ -1,13 +1,14 @@
 #include "DrawAbleObject.h"
 
-DrawAbleObject::DrawAbleObject(Model& model, ShaderProgram& shaderProgram):model(model),shaderProgram(shaderProgram){
+DrawAbleObject::DrawAbleObject(Model &model, ShaderProgram &shaderProgram) : model(model), shaderProgram(shaderProgram)
+{
 	transformations = new TransformationComposite();
-	material = Material(glm::vec3(0.1f),glm::vec3(0.8f),glm::vec3(0.0f),32.0f);
+	material = Material(glm::vec3(0.1f), glm::vec3(0.8f), glm::vec3(0.0f), 32.0f);
 }
 
-void DrawAbleObject::addTransformation(TransformationComponent* transformation)
+void DrawAbleObject::addTransformation(TransformationComponent *transformation)
 {
-	if(!transformation)
+	if (!transformation)
 	{
 		printf("transformace uakzuje na nullptr");
 	}
@@ -21,17 +22,17 @@ glm::mat4 DrawAbleObject::combiMatrix()
 {
 	glm::mat4 matrix(1.0f);
 	matrix = matrix * transformations->getMatrix();
-	if (this->parentSpace) 
+	if (this->parentSpace)
 	{
-        matrix = parentSpace->combiMatrix() * matrix;
-    }
+		matrix = parentSpace->combiMatrix() * matrix;
+	}
 	return matrix;
 }
 
-void DrawAbleObject::setParentSpace(DrawAbleObject* newParentSpace)
+void DrawAbleObject::setParentSpace(DrawAbleObject *newParentSpace)
 {
 	this->parentSpace = newParentSpace;
-	if(parentSpace)
+	if (parentSpace)
 	{
 		this->parentSpace->childrenSpace.push_back(this);
 	}
@@ -46,51 +47,50 @@ void DrawAbleObject::clearTransformation()
 	transformations = new TransformationComposite();
 }
 
-
-void DrawAbleObject::draw(glm::mat4& view, glm::mat4& proj)
+void DrawAbleObject::draw(glm::mat4 &view, glm::mat4 &proj)
 {
-	if(!visible)
+	if (!visible)
 	{
 		return;
 	}
 	glm::mat4 matrix = combiMatrix();
 	shaderProgram.useShaderProgram();
-    shaderProgram.setUniform("modelMatrix", matrix);
-    shaderProgram.setUniform("viewMatrix", view);
-    shaderProgram.setUniform("projectionMatrix", proj);
-    
+	shaderProgram.setUniform("modelMatrix", matrix);
+	shaderProgram.setUniform("viewMatrix", view);
+	shaderProgram.setUniform("projectionMatrix", proj);
+
 	if (useTexture && textureID != 0)
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        shaderProgram.setUniform("textureUnitID", 0);
-        shaderProgram.setUniform("useTexture", 1);
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		shaderProgram.setUniform("textureUnitID", 0);
+		shaderProgram.setUniform("useTexture", 1);
 		shaderProgram.setUniform("uvScale", uvScale);
-    }
-    else
-    {
-        shaderProgram.setUniform("useTexture", 0);
-    }
+	}
+	else
+	{
+		shaderProgram.setUniform("useTexture", 0);
+	}
 	uploadMaterial();
-	
+
 	model.drawModel();
 	glUseProgram(0);
 }
 
-void DrawAbleObject::drawStencil(ShaderProgram& shader, glm::mat4& view, glm::mat4& proj)
+void DrawAbleObject::drawStencil(ShaderProgram &shader, glm::mat4 &view, glm::mat4 &proj)
 {
-    shader.useShaderProgram();
+	shader.useShaderProgram();
 
-    glm::mat4 matrix = combiMatrix();
+	glm::mat4 matrix = combiMatrix();
 
-    shader.setUniform("modelMatrix", matrix);
-    shader.setUniform("viewMatrix", view);
-    shader.setUniform("projectionMatrix", proj);
+	shader.setUniform("modelMatrix", matrix);
+	shader.setUniform("viewMatrix", view);
+	shader.setUniform("projectionMatrix", proj);
 
-    model.drawModel();
+	model.drawModel();
 }
 
-void DrawAbleObject::setMaterial(const Material& mat)
+void DrawAbleObject::setMaterial(const Material &mat)
 {
 	this->material = mat;
 }
@@ -100,13 +100,13 @@ void DrawAbleObject::uploadMaterial()
 	shaderProgram.setUniform("material.ra", material.ra);
 	shaderProgram.setUniform("material.rd", material.rd);
 	shaderProgram.setUniform("material.rs", material.rs);
-	shaderProgram.setUniform("material.h",  material.h);
+	shaderProgram.setUniform("material.h", material.h);
 }
 
 void DrawAbleObject::setTexture(GLuint texID)
 {
-    this->textureID = texID;
-    this->useTexture = true;
+	this->textureID = texID;
+	this->useTexture = true;
 }
 
 void DrawAbleObject::setUvScale(float scale)
@@ -129,7 +129,7 @@ void DrawAbleObject::setVisible(bool visible)
 	this->visible = visible;
 }
 
-Model* DrawAbleObject::getModel()
+Model *DrawAbleObject::getModel()
 {
-    return &model;
+	return &model;
 }

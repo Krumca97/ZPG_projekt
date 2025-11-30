@@ -11,7 +11,7 @@ public:
     virtual glm::mat4 getMatrix() const override;
     void update(float dt);
     void resetPath(const std::vector<glm::vec3>& newPoints, float newSpeed);
-    void setActive(bool a) { active = a; }
+    void setActive(bool a);
 private:
     std::vector<glm::vec3> points;
     int currentSegment = 0;

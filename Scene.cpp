@@ -10,45 +10,38 @@
 #include "Models/tree.h"
 #include "Application.h"
 
-
-Scene::Scene(glm::mat4& view,glm::mat4& proj, std::vector<SceneLightType> lights,bool skyboxSky)
+Scene::Scene(glm::mat4 &view, glm::mat4 &proj, std::vector<SceneLightType> lights, bool skyboxSky)
 {
     this->view = view;
     this->proj = proj;
     this->skyboxShaderProgram = new ShaderProgram();
     this->skyboxStars = skyboxSky;
 
-    if(this->skyboxStars)
+    if (this->skyboxStars)
     {
-        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert",GL_VERTEX_SHADER);
-        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag",GL_FRAGMENT_SHADER);
+        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert", GL_VERTEX_SHADER);
+        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag", GL_FRAGMENT_SHADER);
         this->skyboxShaderProgram->link(skyboxVertexShader, skyboxFragmentShader);
         skybox = new Skybox(skyboxShaderProgram,
-            {
-                "../../Textures/Skybox/px.png",
-                "../../Textures/Skybox/nx.png",
-                "../../Textures/Skybox/py.png",
-                "../../Textures/Skybox/ny.png",
-                "../../Textures/Skybox/pz.png",
-                "../../Textures/Skybox/nz.png"
-            }
-        );
+                            {"../../Textures/Skybox/px.png",
+                             "../../Textures/Skybox/nx.png",
+                             "../../Textures/Skybox/py.png",
+                             "../../Textures/Skybox/ny.png",
+                             "../../Textures/Skybox/pz.png",
+                             "../../Textures/Skybox/nz.png"});
     }
     else
     {
-        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert",GL_VERTEX_SHADER);
-        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag",GL_FRAGMENT_SHADER);
+        Shader skyboxVertexShader("../../Shaders/SkyboxVertexShader.vert", GL_VERTEX_SHADER);
+        Shader skyboxFragmentShader("../../Shaders/SkyboxFragmentShader.frag", GL_FRAGMENT_SHADER);
         this->skyboxShaderProgram->link(skyboxVertexShader, skyboxFragmentShader);
         skybox = new Skybox(skyboxShaderProgram,
-            {
-                "../../Textures/Skybox/posx.jpg",
-                "../../Textures/Skybox/negx.jpg",
-                "../../Textures/Skybox/posy.jpg",
-                "../../Textures/Skybox/negy.jpg",
-                "../../Textures/Skybox/posz.jpg",
-                "../../Textures/Skybox/negz.jpg"
-            }
-        );
+                            {"../../Textures/Skybox/posx.jpg",
+                             "../../Textures/Skybox/negx.jpg",
+                             "../../Textures/Skybox/posy.jpg",
+                             "../../Textures/Skybox/negy.jpg",
+                             "../../Textures/Skybox/posz.jpg",
+                             "../../Textures/Skybox/negz.jpg"});
     }
 
     stencilShaderProgram = new ShaderProgram();
@@ -69,29 +62,29 @@ Scene::Scene(glm::mat4& view,glm::mat4& proj, std::vector<SceneLightType> lights
     {
         switch (type)
         {
-            case SceneLightType::Point:
-                point = new PointLight(glm::vec3(3.0f, 2.0f, 2.0f),glm::vec3(1.0f, 0.9f, 0.8f),1.0f);
-                addLight(point);
-                break;
+        case SceneLightType::Point:
+            point = new PointLight(glm::vec3(3.0f, 2.0f, 2.0f), glm::vec3(1.0f, 0.9f, 0.8f), 1.0f);
+            addLight(point);
+            break;
 
-            case SceneLightType::Directional:
-                directional = new DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f),glm::vec3(1.0f, 1.0f, 0.95f),1.2f);
-                addLight(directional);
-                break;
+        case SceneLightType::Directional:
+            directional = new DirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3(1.0f, 1.0f, 0.95f), 1.2f);
+            addLight(directional);
+            break;
 
-            case SceneLightType::Spot:
-                spot = new SpotLight(glm::vec3(1.0f, 1.0f, 0.9f), 1.0f);
-                addLight(spot);
-                break;
+        case SceneLightType::Spot:
+            spot = new SpotLight(glm::vec3(1.0f, 1.0f, 0.9f), 1.0f);
+            addLight(spot);
+            break;
         }
     }
 };
 
-Scene::~Scene(){};
+Scene::~Scene() {};
 
-void Scene::addObject(DrawAbleObject* object)
+void Scene::addObject(DrawAbleObject *object)
 {
-    if(!object)
+    if (!object)
     {
         printf("DrawAbleObject points to nullptr");
         return;
@@ -102,9 +95,9 @@ void Scene::addObject(DrawAbleObject* object)
     }
 }
 
-void Scene::addShaderProgram(ShaderProgram* shaderProgram)
+void Scene::addShaderProgram(ShaderProgram *shaderProgram)
 {
-    if(!shaderProgram)
+    if (!shaderProgram)
     {
         printf("Shader program points to nullptr");
         return;
@@ -115,31 +108,31 @@ void Scene::addShaderProgram(ShaderProgram* shaderProgram)
     }
 }
 
-void Scene::addLight(LightSubject* light) 
+void Scene::addLight(LightSubject *light)
 {
     lights.push_back(light);
 
-    for (auto* shader : shaderPrograms) 
+    for (auto *shader : shaderPrograms)
     {
-        light->attach(shader); 
+        light->attach(shader);
     }
 }
 
-void Scene::setView(glm::mat4& view)
+void Scene::setView(glm::mat4 &view)
 {
     this->view = view;
 }
 
-void Scene::setProjection(glm::mat4& proj)
+void Scene::setProjection(glm::mat4 &proj)
 {
     this->proj = proj;
 }
 
-void Scene::updateLights(bool reset) 
+void Scene::updateLights(bool reset)
 {
     if (reset)
     {
-        for (auto* shader : shaderPrograms)
+        for (auto *shader : shaderPrograms)
         {
             shader->resetLight();
             shader->setLightIndex(0);
@@ -152,12 +145,12 @@ void Scene::updateLights(bool reset)
     }
 
     int i = 0;
-    for (auto* light : lights)
+    for (auto *light : lights)
     {
         light->notify();
     }
 
-    for (auto* shader : shaderPrograms)
+    for (auto *shader : shaderPrograms)
     {
         shader->uploadLights();
     }
@@ -166,12 +159,12 @@ void Scene::updateLights(bool reset)
 void Scene::drawScene()
 {
     glStencilMask(0x00);
-    for (auto& object : drawAbleObjects)
+    for (auto &object : drawAbleObjects)
     {
-        object->draw(view,proj);
+        object->draw(view, proj);
     }
     skybox->draw(view, proj);
-    glStencilMask(0xFF); 
+    glStencilMask(0xFF);
 }
 
 void Scene::drawSceneStencil()
@@ -183,10 +176,10 @@ void Scene::drawSceneStencil()
 
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     glDepthMask(GL_FALSE);
-    
-    Application* app = static_cast<Application*>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
 
-    for (DrawAbleObject* obj : drawAbleObjects)
+    Application *app = static_cast<Application *>(glfwGetWindowUserPointer(glfwGetCurrentContext()));
+
+    for (DrawAbleObject *obj : drawAbleObjects)
     {
         if (app && app->isObjectMoving() && app->getMovingObject() == obj)
         {
@@ -202,53 +195,52 @@ void Scene::drawSceneStencil()
     glDisable(GL_STENCIL_TEST);
 }
 
-
-void Scene::buildFireflies(Model* model, ShaderProgram* shader,Scene* scene) 
+void Scene::buildFireflies(Model *model, ShaderProgram *shader, Scene *scene)
 {
-	fireflies.clear();
-	std::srand((unsigned)std::time(nullptr));
+    fireflies.clear();
+    std::srand((unsigned)std::time(nullptr));
 
-	const int numFireflies = 8;
-	const float forestArea = 25.0f;
+    const int numFireflies = 8;
+    const float forestArea = 25.0f;
 
-	for (int i = 0; i < numFireflies; i++)
-	{
-		float x = -forestArea + 2.0f * forestArea * (std::rand() / (float)RAND_MAX);
-		float y = 0.5f + 3.5f * (std::rand() / (float)RAND_MAX);
-		float z = -forestArea + 2.0f * forestArea * (std::rand() / (float)RAND_MAX);
-		glm::vec3 pos(x, y, z);
-		glm::vec3 color(1.0f, 0.9f, 0.7f);
-		float intensity = 0.2f;
-		fireflies.push_back(new LightSubject(pos, color, intensity));
-	}
+    for (int i = 0; i < numFireflies; i++)
+    {
+        float x = -forestArea + 2.0f * forestArea * (std::rand() / (float)RAND_MAX);
+        float y = 0.5f + 3.5f * (std::rand() / (float)RAND_MAX);
+        float z = -forestArea + 2.0f * forestArea * (std::rand() / (float)RAND_MAX);
+        glm::vec3 pos(x, y, z);
+        glm::vec3 color(1.0f, 0.9f, 0.7f);
+        float intensity = 0.2f;
+        fireflies.push_back(new LightSubject(pos, color, intensity));
+    }
 
-	firefliesData.clear();
+    firefliesData.clear();
 
-	for (int i = 0; i < fireflies.size(); i++)
-	{
+    for (int i = 0; i < fireflies.size(); i++)
+    {
 
-		glm::vec3 pos = fireflies[i]->getPosition();
+        glm::vec3 pos = fireflies[i]->getPosition();
 
-		DrawAbleObject* sphere = new DrawAbleObject(*model, *shader);
-		sphere->addTransformation(new TransformationTranslate(pos, 0.0f));
-		sphere->addTransformation(new TransformationScale(glm::vec3(0.005f), 0.0f));
-		shader->setObjectColor(glm::vec3(1.f, 0.9f, 0.6f));
-		scene->addObject(sphere);
+        DrawAbleObject *sphere = new DrawAbleObject(*model, *shader);
+        sphere->addTransformation(new TransformationTranslate(pos, 0.0f));
+        sphere->addTransformation(new TransformationScale(glm::vec3(0.005f), 0.0f));
+        shader->setObjectColor(glm::vec3(1.f, 0.9f, 0.6f));
+        scene->addObject(sphere);
 
-		glm::vec3 dir = glm::normalize(glm::vec3(((std::rand() % 200) - 100) / 100.0f,((std::rand() % 100) - 50) / 200.0f,((std::rand() % 200) - 100) / 100.0f));
-		Firefly f = {sphere,fireflies[i],pos,dir,glfwGetTime(),glfwGetTime()};
+        glm::vec3 dir = glm::normalize(glm::vec3(((std::rand() % 200) - 100) / 100.0f, ((std::rand() % 100) - 50) / 200.0f, ((std::rand() % 200) - 100) / 100.0f));
+        Firefly f = {sphere, fireflies[i], pos, dir, glfwGetTime(), glfwGetTime()};
 
-		firefliesData.push_back(f);
-		fireflies[i]->attach(shader);
-		scene->addLight(fireflies[i]);
-	}
+        firefliesData.push_back(f);
+        fireflies[i]->attach(shader);
+        scene->addLight(fireflies[i]);
+    }
 }
 
-void Scene::updateFireflies() 
+void Scene::updateFireflies()
 {
     const float area = 25.0f;
 
-    for (auto& firefly : firefliesData)
+    for (auto &firefly : firefliesData)
     {
         double now = glfwGetTime();
         float dt = float(now - firefly.lastUpdate);
@@ -257,7 +249,7 @@ void Scene::updateFireflies()
         if (now - firefly.lastChangeDir > 2.0 + (std::rand() % 2000) / 1000.0)
         {
             firefly.lastChangeDir = now;
-            float yaw   = ((std::rand() % 360) - 180) * 0.1f;
+            float yaw = ((std::rand() % 360) - 180) * 0.1f;
             float pitch = ((std::rand() % 100) - 50) * 0.02f;
             glm::mat4 rot(1.0f);
             rot = glm::rotate(rot, glm::radians(yaw), glm::vec3(0, 1, 0));
@@ -267,9 +259,12 @@ void Scene::updateFireflies()
 
         firefly.position += firefly.direction * dt * 0.5f;
 
-        if (firefly.position.x < -area || firefly.position.x > area) firefly.direction.x *= -1;
-        if (firefly.position.z < -area || firefly.position.z > area) firefly.direction.z *= -1;
-        if (firefly.position.y < 0.2f || firefly.position.y > 4.0f)  firefly.direction.y *= -1;
+        if (firefly.position.x < -area || firefly.position.x > area)
+            firefly.direction.x *= -1;
+        if (firefly.position.z < -area || firefly.position.z > area)
+            firefly.direction.z *= -1;
+        if (firefly.position.y < 0.2f || firefly.position.y > 4.0f)
+            firefly.direction.y *= -1;
 
         firefly.position.x = glm::clamp(firefly.position.x, -area, area);
         firefly.position.y = glm::clamp(firefly.position.y, 0.2f, 4.0f);
@@ -277,7 +272,7 @@ void Scene::updateFireflies()
 
         firefly.light->clearTransformation();
         firefly.light->addTransformation(new TransformationTranslate(firefly.position, 0.0f));
-		firefly.light->notify();
+        firefly.light->notify();
 
         firefly.sphere->clearTransformation();
         firefly.sphere->addTransformation(new TransformationTranslate(firefly.position, 0.0f));
@@ -287,30 +282,30 @@ void Scene::updateFireflies()
 
 void Scene::setCamera(float ratio)
 {
-    this->camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f),-90.0f,0.0f,60.f,ratio,0.1f,100.f,3.f,0.003f);
+    this->camera = new CameraSubject(glm::vec3(0.f, 1.7f, 3.f), -90.0f, 0.0f, 60.f, ratio, 0.1f, 100.f, 3.f, 0.003f);
     this->controller = new Controller(this->camera);
 
-    for (auto* shader : shaderPrograms)
+    for (auto *shader : shaderPrograms)
     {
         this->camera->attach(shader);
     }
     this->camera->notify();
 
-    if(spot)
+    if (spot)
     {
         spot->attachCamera(this->camera);
     }
 }
 
-CameraSubject* Scene::getCamera()
+CameraSubject *Scene::getCamera()
 {
     return this->camera;
 }
 
-void Scene::updateCamera(GLFWwindow* window, float deltaTime)
+void Scene::updateCamera(GLFWwindow *window, float deltaTime)
 {
     if (!this->controller || !this->camera)
-    { 
+    {
         return;
     }
     this->controller->processKeyboard(window, deltaTime);
@@ -318,7 +313,7 @@ void Scene::updateCamera(GLFWwindow* window, float deltaTime)
     view = this->camera->getViewMatrix();
     proj = this->camera->projectionMatrix();
 
-    for (auto* shader : shaderPrograms)
+    for (auto *shader : shaderPrograms)
     {
         shader->onCameraChange(view, proj, camera->getPosition());
     }
@@ -338,7 +333,7 @@ void Scene::updateCamera(GLFWwindow* window, float deltaTime)
     glm::vec3 pos = camera->getPosition();
 }
 
-Controller* Scene::getController()
+Controller *Scene::getController()
 {
     return this->controller;
 }
@@ -347,7 +342,7 @@ void Scene::setSelect(int id)
 {
     selectedObject = nullptr;
 
-    for (DrawAbleObject* obj : this->drawAbleObjects)
+    for (DrawAbleObject *obj : this->drawAbleObjects)
     {
         if (obj->getId() == id)
         {
@@ -355,31 +350,29 @@ void Scene::setSelect(int id)
             return;
         }
     }
-
 }
 
-DrawAbleObject* Scene::getSelected() const
+DrawAbleObject *Scene::getSelected() const
 {
-     return selectedObject;
+    return selectedObject;
 }
 
-void Scene::plantTree(const glm::vec3& worldPos)
+void Scene::plantTree(const glm::vec3 &worldPos)
 {
-    DrawAbleObject* newTree = new DrawAbleObject(*modelTree, *shaderTree);
+    DrawAbleObject *newTree = new DrawAbleObject(*modelTree, *shaderTree);
     newTree->setMaterial(treeMaterial);
 
     newTree->setId(this->nextId++);
     shaderTree->setObjectColor(glm::vec3(0.0f, 1.0f, 0.0f));
-    TransformationComposite* trans = new TransformationComposite();
+    TransformationComposite *trans = new TransformationComposite();
     trans->addTransformation(new TransformationTranslate(worldPos, 1.0f));
     trans->addTransformation(new TransformationScale(glm::vec3(1.0f), 0.0f));
     newTree->addTransformation(trans);
 
     this->drawAbleObjects.push_back(newTree);
 
-    for (LightSubject* light : this->lights)
+    for (LightSubject *light : this->lights)
     {
         light->notify();
     }
 }
-
