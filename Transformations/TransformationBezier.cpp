@@ -23,18 +23,21 @@ glm::mat4 TransformationBezier::getMatrix() const
 
     const BezierSegment &seg = this->segments[currentSegmentIndex];
 
-    glm::mat4x3 B = glm::mat4x3(
-        glm::vec3(seg.P0),
-        glm::vec3(seg.P1),
-        glm::vec3(seg.P2),
-        glm::vec3(seg.P3));
+    float u = 1.0f - t;
 
-    glm::vec4 T = glm::vec4(t * t * t, t * t, t, 1.0f);
-    glm::vec4 dT = glm::vec4(3 * t * t, 2 * t, 1.0f, 0.0f);
+    glm::vec3 t1 = glm::vec3((u * u * u) * seg.P0);
+    glm::vec3 t2 = glm::vec3(3.0f * (u * u) * t * seg.P1);
+    glm::vec3 t3 = glm::vec3(3.0f * u * (t * t) * seg.P2);
+    glm::vec3 t4 = glm::vec3((t * t * t) * seg.P3);
+    glm::vec4 T = glm::vec4(t1 + t2 + t3 + t4, 0.0f);
 
-    glm::vec3 pos = T * this->bezierA * glm::transpose(B);
+    glm::vec3 dT1 = 3.0f * u * u * glm::vec3(seg.P1 - seg.P0);
+    glm::vec3 dT2 = 6.0f * u * t * glm::vec3(seg.P2 - seg.P1);
+    glm::vec3 dT3 = 3.0f * t * t * glm::vec3(seg.P3 - seg.P2);
+    glm::vec4 dT = glm::vec4(dT1 + dT2 + dT3, 0.0f);
 
-    glm::vec3 tangent = glm::normalize(dT * this->bezierA * glm::transpose(B));
+    glm::vec3 pos = glm::vec3(T);
+    glm::vec3 tangent = glm::normalize(dT);
 
     glm::vec3 forward = glm::normalize(glm::vec3(tangent));
     glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -42,9 +45,9 @@ glm::mat4 TransformationBezier::getMatrix() const
     glm::vec3 up = glm::cross(forward, right);
 
     glm::mat4 rotation(1.0f);
-    rotation[0] = glm::vec4(forward, 0.0f);
+    rotation[0] = glm::vec4(right, 0.0f);
     rotation[1] = glm::vec4(up, 0.0f);
-    rotation[2] = glm::vec4(right, 0.0f);
+    rotation[2] = glm::vec4(forward, 0.0f);
 
     return glm::translate(glm::mat4(1.0f), pos) * rotation;
 }

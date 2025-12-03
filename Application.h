@@ -99,6 +99,7 @@ private:
 
 	bool isMovingObject = false;
 	bool plantingMode = false;
+	bool deleteMode = false;
 	DrawAbleObject *movingObject = nullptr;
 
 	static void error_callback(int error, const char *description);
@@ -109,6 +110,7 @@ private:
 	void togglePlantingMode();
 	void toggleBezierControlPointsMode();
 	void restartShellGame();
+	void deleteSelected();
 	static void window_focus_callback(GLFWwindow *window, int focused);
 	static void window_iconify_callback(GLFWwindow *window, int iconified);
 	static void window_size_callback(GLFWwindow *window, int width, int height);

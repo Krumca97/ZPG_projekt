@@ -2,7 +2,7 @@ Vytvořte dynamickou transformaci, které zadáte čtyři body. Transformace bud
 -----------------
 Pro vytvoreni bezierovi transformace jsem pouzil prevod na maticove vyjadreni kubicke bezierovy krivky. 
 Nejdrive cekam na 4 ridici body, abych mohl sestrojit prvni segment krivky. Pote tyto body vlozim do matice.
-Vypocitam si pomoci bezierovych polynomu pozici a derivaci. Pote si vypoctu pozici objektu na krivce.
+Vypocitam si pomoci bezierovych polynomu v maticovem provedeni pozici a derivaci. Pote si vypoctu pozici objektu na krivce.
 Zjistim smer pohybu a natocim objekt timto smerem. Vytvorim konstrukci lokalni souradne soustavy  a zarotuju objektem podle smeru pohybu.
 Nakonec provedu vyslednou translaci.Kazdy segment tvorim tak ze nejdriv odeberu veskere segmenty.
 Zjistim si pocet kontrolnich bodu a pokud zjistim ze jich je mene nez 4, tak pockam na prvni 4 body.

@@ -14,7 +14,7 @@ Scene *Scene8::Build(Application *app, Scene8 *sceneLogic)
 
     sceneLogic->app = app;
 
-    Scene *scene = new Scene(view, proj, {SceneLightType::Point}, false);
+    Scene *scene = new Scene(view, proj, {SceneLightType::Ambient}, false);
     scene->addShaderProgram(app->shaderFormula1Texture2);
 
     Material neutral(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 128.0f);
@@ -50,7 +50,6 @@ Scene *Scene8::Build(Application *app, Scene8 *sceneLogic)
 
     TransformationComposite *formula1_transformation = new TransformationComposite();
     formula1_transformation->addTransformation(new TransformationScale(glm::vec3(0.1f), 0.f));
-    formula1_transformation->addTransformation(new TransformationRotate(glm::vec3(0.f, 1.f, 0.f), 180.f, 0.f));
 
     std::vector<glm::vec3> path = {
         {0.f, 0.f, 0.f},
@@ -100,7 +99,7 @@ void Scene8::rebuildBezier()
     comp->addTransformation(bezierTransform);
 
     comp->addTransformation(new TransformationScale(glm::vec3(0.1f), 0.f));
-    comp->addTransformation(new TransformationRotate(glm::vec3(0, 1, 0), 180.f, 0.f));
+    comp->addTransformation(new TransformationRotate(glm::vec3(0, 1, 0), 90.f, 0.f));
 
     formulaCar->addTransformation(comp);
 }

@@ -87,7 +87,7 @@ void main()
         }
         else if(lights[i].type == 0)
         {
-            lightDir = normalize(-lights[i].position);
+            lightDir = normalize(-lights[i].direction);
 
             float diff = max(dot(norm, lightDir), 0.0);
             vec3 reflectDir = reflect(-lightDir, norm);

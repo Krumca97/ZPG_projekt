@@ -16,7 +16,7 @@ Scene *Scene4::Build(Application *app)
 
     Scene *scene = new Scene(view, proj, {SceneLightType::Point}, true);
 
-    Material neutral(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 128.0f);
+    Material neutral(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 2.0f);
 
     TransformationComposite *sunT = new TransformationComposite();
     sunT->addTransformation(new TransformationScale(glm::vec3(4.f), 0.f));
@@ -39,8 +39,7 @@ Scene *Scene4::Build(Application *app)
     app->objectMoon->setParentSpace(app->objectEarth);
 
     TransformationComposite *loginT = new TransformationComposite();
-    loginT->addTransformation(new TransformationRotate(glm::vec3(0, 1, 0), 0.f, -40.f));
-    loginT->addTransformation(new TransformationRotate(glm::vec3(0, 1, 0), 0.f, -60.f));
+    loginT->addTransformation(new TransformationRotate(glm::vec3(0, 1, 0), 0.f, -100.f));
     loginT->addTransformation(new TransformationTranslate(glm::vec3(4.f, 0.f, 0.f), 0.f));
     loginT->addTransformation(new TransformationScale(glm::vec3(0.35f), 0.f));
     app->objectLogin->addTransformation(loginT);
@@ -121,7 +120,7 @@ Scene *Scene4::Build(Application *app)
     scene->addShaderProgram(app->shaderEarth);
     scene->addShaderProgram(app->shaderMoon);
 
-    PointLight *sunLight = new PointLight(glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f), 40.f);
+    PointLight *sunLight = new PointLight(glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 1.f), 100.f);
 
     sunLight->attach(app->shaderEarth);
     sunLight->attach(app->shaderMoon);

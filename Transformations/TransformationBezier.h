@@ -23,11 +23,5 @@ private:
     float speed;
     int segmentCount = 0;
 
-    const glm::mat4 bezierA = glm::mat4(
-        glm::vec4(-1.0f, 3.0f, -3.0f, 1.0f),
-        glm::vec4(3.0f, -6.0f, 3.0f, 0.0f),
-        glm::vec4(-3.0f, 3.0f, 0.0f, 0.0f),
-        glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
-
     void buildSegments();
 };

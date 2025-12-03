@@ -73,7 +73,7 @@ Scene::Scene(glm::mat4 &view, glm::mat4 &proj, std::vector<SceneLightType> light
             break;
 
         case SceneLightType::Spot:
-            spot = new SpotLight(glm::vec3(1.0f, 1.0f, 0.9f), 1.0f);
+            spot = new SpotLight(glm::vec3(1.0f, 1.0f, 0.9f), 2.0f);
             addLight(spot);
             break;
         }
@@ -260,11 +260,17 @@ void Scene::updateFireflies()
         firefly.position += firefly.direction * dt * 0.5f;
 
         if (firefly.position.x < -area || firefly.position.x > area)
+        {
             firefly.direction.x *= -1;
+        }
         if (firefly.position.z < -area || firefly.position.z > area)
+        {
             firefly.direction.z *= -1;
+        }
         if (firefly.position.y < 0.2f || firefly.position.y > 4.0f)
+        {
             firefly.direction.y *= -1;
+        }
 
         firefly.position.x = glm::clamp(firefly.position.x, -area, area);
         firefly.position.y = glm::clamp(firefly.position.y, 0.2f, 4.0f);
@@ -359,6 +365,7 @@ DrawAbleObject *Scene::getSelected() const
 
 void Scene::plantTree(const glm::vec3 &worldPos)
 {
+    nextId = drawAbleObjects.size() + 1;
     DrawAbleObject *newTree = new DrawAbleObject(*modelTree, *shaderTree);
     newTree->setMaterial(treeMaterial);
 
@@ -374,5 +381,19 @@ void Scene::plantTree(const glm::vec3 &worldPos)
     for (LightSubject *light : this->lights)
     {
         light->notify();
+    }
+}
+
+void Scene::deleteSelected()
+{
+    for (int i = 1; i < drawAbleObjects.size(); i++)
+    {
+        if (drawAbleObjects[i] == selectedObject)
+        {
+            delete drawAbleObjects[i];
+            drawAbleObjects.erase(drawAbleObjects.begin() + i);
+            selectedObject = nullptr;
+            return;
+        }
     }
 }

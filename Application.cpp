@@ -117,6 +117,9 @@ void Application::key_callback(GLFWwindow *window, int key, int scancode, int ac
     case GLFW_KEY_J:
         app->toggleBezierControlPointsMode();
         break;
+    case GLFW_KEY_L:
+        app->deleteSelected();
+        break;
     }
 }
 
@@ -182,6 +185,19 @@ void Application::togglePlantingMode()
     else
     {
         printf("PLANTING MODE DISABLED\n");
+    }
+}
+
+void Application::deleteSelected()
+{
+    deleteMode = !deleteMode;
+    if (deleteMode)
+    {
+        printf("DELETE MODE ENABLED\n");
+    }
+    else
+    {
+        printf("DELETE MODE DISABLED\n");
     }
 }
 
@@ -412,7 +428,9 @@ void Application::onResize(int width, int height)
 void Application::onMouseMove(double x, double y)
 {
     if (!sceneActual)
+    {
         return;
+    }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     {
@@ -431,7 +449,9 @@ void Application::onMouseMove(double x, double y)
 void Application::onMouseButton(int button, int action, int mods)
 {
     if (!sceneActual)
+    {
         return;
+    }
 
     if (button == GLFW_MOUSE_BUTTON_RIGHT)
     {
@@ -515,6 +535,12 @@ void Application::handleLeftClick()
     {
         world.y = 0.0f;
         sceneActual->plantTree(world);
+        return;
+    }
+
+    if (deleteMode)
+    {
+        sceneActual->deleteSelected();
         return;
     }
 

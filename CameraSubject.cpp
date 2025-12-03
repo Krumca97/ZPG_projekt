@@ -3,7 +3,7 @@
 #include "Shader_program.h"
 #include "IObserverCamera.h"
 
-CameraSubject::CameraSubject(glm::vec3 position,float yawDeg, float pitchDeg,float fieldOfView, float windowRatio,float nearPlane, float farPlane,float moveSpeed, float mouseSensitivity)
+CameraSubject::CameraSubject(glm::vec3 position, float yawDeg, float pitchDeg, float fieldOfView, float windowRatio, float nearPlane, float farPlane, float moveSpeed, float mouseSensitivity)
 {
     this->position = position;
     this->yaw = glm::radians(yawDeg);
@@ -25,18 +25,17 @@ CameraSubject::CameraSubject(glm::vec3 position,float yawDeg, float pitchDeg,flo
     updateVectors();
 }
 
-glm::mat4 CameraSubject:: getViewMatrix()
+glm::mat4 CameraSubject::getViewMatrix()
 {
     return glm::lookAt(position, position + forward, up);
 }
 
-
 glm::mat4 CameraSubject::projectionMatrix()
 {
-    return glm::perspective(glm::radians(fieldOfView),windowRatio,nearPlane,farPlane);
+    return glm::perspective(glm::radians(fieldOfView), windowRatio, nearPlane, farPlane);
 }
 
-void CameraSubject::attach(ShaderProgram* shaderProgram)
+void CameraSubject::attach(ShaderProgram *shaderProgram)
 {
     this->shaderProgramsObservers.push_back(shaderProgram);
 }
@@ -46,9 +45,9 @@ void CameraSubject::notify()
     glm::mat4 view = this->getViewMatrix();
     glm::mat4 proj = this->projectionMatrix();
 
-    for(IObserverCamera* shader : shaderProgramsObservers)
+    for (IObserverCamera *shader : shaderProgramsObservers)
     {
-        shader->onCameraChange(view,proj,this->position);
+        shader->onCameraChange(view, proj, this->position);
     }
 }
 
@@ -57,7 +56,6 @@ void CameraSubject::moveForward(float dt)
     position += forward * dt * moveSpeed;
     notify();
 }
-
 
 void CameraSubject::moveBackward(float dt)
 {
@@ -77,19 +75,19 @@ void CameraSubject::moveLeft(float dt)
     notify();
 }
 
-void CameraSubject::mouseDeltaMovement(float directionY,float directionX)
+void CameraSubject::mouseDeltaMovement(float directionY, float directionX)
 {
-    yaw   += directionX * mouseSensitivity;
+    yaw += directionX * mouseSensitivity;
     pitch += directionY * mouseSensitivity;
 
     pitch = glm::clamp(pitch, glm::radians(-89.0f), glm::radians(89.0f));
 
     if (yaw > glm::two_pi<float>())
-    { 
+    {
         yaw -= glm::two_pi<float>();
     }
     if (yaw < 0)
-    { 
+    {
         yaw += glm::two_pi<float>();
     }
 
@@ -105,12 +103,12 @@ void CameraSubject::updateVectors()
     forward = glm::normalize(forward);
 
     right = glm::normalize(glm::cross(forward, worldUp));
-    up    = glm::normalize(glm::cross(right, forward));
+    up = glm::normalize(glm::cross(right, forward));
 }
 
 void CameraSubject::setFieldOfView(float fieldOfView)
 {
-    this->fieldOfView = std::clamp(fieldOfView,20.f,90.f);
+    this->fieldOfView = std::clamp(fieldOfView, 20.f, 90.f);
 }
 
 void CameraSubject::setWindowRatio(float windowRatio)
@@ -122,7 +120,6 @@ glm::vec3 CameraSubject::getPosition()
 {
     return this->position;
 }
-
 
 void CameraSubject::setPosition(glm::vec3 position)
 {
@@ -140,12 +137,12 @@ float CameraSubject::getCameraSpeed()
     return this->moveSpeed;
 }
 
-glm::ivec2 CameraSubject::getResolution() const 
+glm::ivec2 CameraSubject::getResolution() const
 {
     return glm::ivec2(windowWidth, windowHeight);
 }
 
-void CameraSubject::setResolution(int w, int h) 
+void CameraSubject::setResolution(int w, int h)
 {
     windowWidth = w;
     windowHeight = h;
