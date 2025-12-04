@@ -493,7 +493,7 @@ void Application::moveObjectUnderCursor(double mx, double my)
     glm::vec3 screen(mouseX, newY, 0.99f);
     glm::vec3 world = glm::unProject(screen, scene->getCamera()->getViewMatrix(), scene->getCamera()->projectionMatrix(), viewport);
 
-    world.y = 0.0f;
+    //world.y = 0.0f;
 
     movingObject->clearTransformation();
     auto *move = new TransformationComposite();
@@ -533,7 +533,7 @@ void Application::handleLeftClick()
 
     if (plantingMode)
     {
-        world.y = 0.0f;
+        //world.y = 0.0f;
         sceneActual->plantTree(world);
         return;
     }
@@ -552,7 +552,7 @@ void Application::handleLeftClick()
             return;
         }
 
-        world.y = 0.0f;
+        //world.y = 0.0f;
         scene8logic->addBezierPoint(world);
 
         return;
@@ -717,6 +717,7 @@ void Application::createBuffers()
 
     // scene 8 formula1
     formula1_scene8 = createModelAndObjectFromFile("formula1.obj", shaderFormula1Texture2);
+    teren = createModelAndObjectFromFile("teren.obj",shaderFormula1Texture2);
 }
 
 void Application::buildScene()

@@ -14,9 +14,9 @@ Scene *Scene4::Build(Application *app)
     glm::mat4 view(1.0f);
     glm::mat4 proj(1.0f);
 
-    Scene *scene = new Scene(view, proj, {SceneLightType::Point}, true);
+    Scene *scene = new Scene(view, proj, {SceneLightType::Point,SceneLightType::Spot}, true);
 
-    Material neutral(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 2.0f);
+    Material neutral(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), 64.0f);
 
     TransformationComposite *sunT = new TransformationComposite();
     sunT->addTransformation(new TransformationScale(glm::vec3(4.f), 0.f));

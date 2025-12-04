@@ -58,7 +58,7 @@ void main()
 
     for (int i = 0; i < lightCount; i++)
     {
-        if(lights[i].type == 2)
+        if(lights[i].type == 2) //ambient
         {
             result += material.ra * baseColor * lights[i].color * lights[i].intensity;
             continue;
@@ -69,7 +69,7 @@ void main()
         vec3 diffuse = vec3(0.0); 
         vec3 specular = vec3(0.0); 
 
-        if(lights[i].type == 1)
+        if(lights[i].type == 1) //pointLight
         {
             lightDir = normalize(lights[i].position - fragPosWorld);
             float distance = length(lights[i].position - fragPosWorld);
@@ -85,7 +85,7 @@ void main()
 
             result += (diffuse + specular) * lights[i].intensity * att;
         }
-        else if(lights[i].type == 0)
+        else if(lights[i].type == 0) //Directional 
         {
             lightDir = normalize(-lights[i].direction);
 
@@ -97,7 +97,7 @@ void main()
             diffuse = material.rd * diff * lights[i].color * baseColor;
             specular = material.rs *0.03* spec * lights[i].color;
 
-            result += (diffuse + specular) * lights[i].intensity * att;
+            result += (diffuse + specular) * lights[i].intensity;
         }
         
         if (lights[i].type == 3)   // SPOT LIGHT

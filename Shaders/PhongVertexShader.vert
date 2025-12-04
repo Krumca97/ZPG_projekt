@@ -14,7 +14,7 @@ out vec2 uv;
 
 void main()
 {
-    vec4 worldPos = modelMatrix * vec4(aPos* 500, 500.0f);
+    vec4 worldPos = modelMatrix * vec4(aPos* 5, 5.0f);
     fragPosWorld = worldPos.xyz / worldPos.w;
 
     normalWorld = normalize(mat3(transpose(inverse(modelMatrix))) * aNormal);

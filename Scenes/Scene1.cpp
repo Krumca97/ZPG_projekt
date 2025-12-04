@@ -10,7 +10,7 @@ Scene *Scene1::Build(Application *app)
     glm::mat4 view(1.0f);
     glm::mat4 proj(1.0f);
 
-    Scene *scene = new Scene(view, proj, {SceneLightType::Ambient}, false);
+    Scene *scene = new Scene(view, proj, {SceneLightType::Ambient,SceneLightType::Spot}, false);
 
     DrawAbleObject *tri = app->objectTriangle;
     ShaderProgram *triShader = app->shaderTriangle;

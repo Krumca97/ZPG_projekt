@@ -191,4 +191,6 @@ protected:
 	ShaderProgram *shaderFormula1Texture2 = nullptr;
 	Model *modelFormula1_2 = nullptr;
 	DrawAbleObject *formula1_scene8 = nullptr;
+	Model * teren1 = nullptr;
+	DrawAbleObject* teren = nullptr;
 };

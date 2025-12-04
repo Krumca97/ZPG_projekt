@@ -61,7 +61,7 @@ Scene *Scene2::Build(Application *app)
     scene->addLight(ambient);
 
     // Point light
-    PointLight *point = new PointLight(lightCenter + glm::vec3(0.f, 0.7f, 0.f), glm::vec3(0.9f, 0.7f, 0.7f), 0.75f);
+    PointLight *point = new PointLight(lightCenter + glm::vec3(0.f, 0.0f, 0.f), glm::vec3(0.9f, 0.7f, 0.7f), 0.75f);
     point->attach(sh2);
     point->notify();
     scene->addLight(point);

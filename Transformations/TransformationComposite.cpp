@@ -14,17 +14,6 @@ glm::mat4 TransformationComposite::getMatrix() const
         {
             continue;
         }
-
-        // zmena
-        // const TransformationComposite *group = dynamic_cast<const TransformationComposite *>(transformation);
-        // if (group)
-        // {
-        //     matrix *= group->getMatrix();
-        // }
-        // else
-        // {
-        //     matrix *= transformation->getMatrix();
-        // }
         matrix *= transformation->getMatrix();
     }
 

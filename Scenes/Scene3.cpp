@@ -18,7 +18,7 @@ Scene* Scene3::Build(Application* app)
     glm::mat4 view(1.0f);
     glm::mat4 proj(1.0f);
 
-    Scene* scene = new Scene(view,proj,{ SceneLightType::Ambient, SceneLightType::Point },false);
+    Scene* scene = new Scene(view,proj,{ SceneLightType::Ambient, SceneLightType::Point,SceneLightType::Spot },false); //added spotlight
 
     Material neutral(glm::vec3(0.1f),glm::vec3(1.0f),glm::vec3(1.0f),128.0f);    
 
@@ -144,6 +144,11 @@ Scene* Scene3::Build(Application* app)
     lf->attach(app->shaderToiletTexture);
     lf->notify();
     scene->addLight(lf);
+
+    // SpotLight *spot = scene->getSpotLight();
+    // spot->attachCamera(scene->getCamera());
+    // spot->notify();
+    // scene->addLight(spot);
 
     scene->buildFireflies(app->modelSphere, app->shaderSphereForest, scene);
 

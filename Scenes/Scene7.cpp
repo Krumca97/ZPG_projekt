@@ -15,7 +15,7 @@ Scene* Scene7::Build(Application* app)
     glm::mat4 view(1.f);
     glm::mat4 proj(1.f);
 
-    Scene* scene = new Scene(view,proj,{ SceneLightType::Point },false);
+    Scene* scene = new Scene(view,proj,{ SceneLightType::Point,SceneLightType::Spot },false);
 
     scene->addShaderProgram(app->shaderCup);
     scene->addShaderProgram(app->shaderBall);
