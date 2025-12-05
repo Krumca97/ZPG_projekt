@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kvíz – ZPG Přednáška 1 (20 otázek)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .correct {
+            border: 2px solid green !important;
+        }
+
+        .incorrect {
+            border: 2px solid red !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kvíz – Základy počítačové grafiky (Přednáška 1)</h1>
+    <p>Celkem 25 otázek. Po zodpovězení klikni na <b>Vyhodnotit</b>.</p>
+
+    <script>
+        const answers = {
+            q1: "B", q2: "B", q3: "B", q4: "C", q5: "A",
+            q6: "A", q7: "C", q8: "B", q9: "A", q10: "B",
+            q11: "C", q12: "D", q13: "A", q14: "C", q15: "B",
+            q16: "A", q17: "C", q18: "A", q19: "B", q20: "C"
+        };
+
+        const answers_numeric = {
+            q21: "5",          // velikost vektoru (3,4)
+            q22: "A+(B−A)t",   // parametrické vyjádření přímky
+            q23: "(-1,1)",     // příklad rotace bodu (1,1) o 90° CCW
+            q24: "11",         // skalární součin (2,3)·(1,3)
+            q25: "(0,0,1)"     // vektorový součin (1,0,0)x(0,1,0)
+        };
+    </script>
+    <div class="question" id="q1">
+        <p><b>1. Co je cílem předmětu ZPG?</b></p><label><input type="radio" name="q1" value="A"> Naučit se Unreal
+            Engine</label><br><label><input type="radio" name="q1" value="B"> Osvojit si principy 3D grafiky, shadery a
+            řetězec</label><br><label><input type="radio" name="q1" value="C"> Naučit se pouze
+            matematiku</label><br><label><input type="radio" name="q1" value="D"> Vytvořit vlastní hru</label><br>
+    </div>
+    <div class="question" id="q2">
+        <p><b>2. OpenGL je…</b></p><label><input type="radio" name="q2" value="A"> Nízkourovňové
+            API</label><br><label><input type="radio" name="q2" value="B"> Vyšší úroveň abstrakce vhodná pro
+            začátečníky</label><br><label><input type="radio" name="q2" value="C"> API Xboxu</label><br><label><input
+                type="radio" name="q2" value="D"> Program pro modelování</label><br>
+    </div>
+    <div class="question" id="q3">
+        <p><b>3. Který shader barví fragmenty?</b></p><label><input type="radio" name="q3" value="A"> Vertex
+            shader</label><br><label><input type="radio" name="q3" value="B"> Fragment shader</label><br><label><input
+                type="radio" name="q3" value="C"> Geometry shader</label><br><label><input type="radio" name="q3"
+                value="D"> Compute shader</label><br>
+    </div>
+    <div class="question" id="q4">
+        <p><b>4. Vulkan je…</b></p><label><input type="radio" name="q4" value="A"> Zastaralý předchůdce
+            OpenGL</label><br><label><input type="radio" name="q4" value="B"> Vysoce abstraktní
+            API</label><br><label><input type="radio" name="q4" value="C"> Nízkourovňové API pro
+            paralelizaci</label><br><label><input type="radio" name="q4" value="D"> Program na textury</label><br>
+    </div>
+    <div class="question" id="q5">
+        <p><b>5. Správné pořadí vykreslovacího řetězce:</b></p><label><input type="radio" name="q5" value="A"> Vertex →
+            Clipping → Rasterizace → Fragment</label><br><label><input type="radio" name="q5" value="B"> Rasterizace →
+            Vertex → Fragment</label><br><label><input type="radio" name="q5" value="C"> Fragment → Clipping →
+            Rasterizace</label><br><label><input type="radio" name="q5" value="D"> CPU → Rasterizace → GPU</label><br>
+    </div>
+    <div class="question" id="q6">
+        <p><b>6. Co je rasterizace?</b></p><label><input type="radio" name="q6" value="A"> Převod vektorů na
+            pixely</label><br><label><input type="radio" name="q6" value="B"> Vykreslení
+            shaderu</label><br><label><input type="radio" name="q6" value="C"> Zpracování okna</label><br><label><input
+                type="radio" name="q6" value="D"> Čištění framebufferu</label><br>
+    </div>
+    <div class="question" id="q7">
+        <p><b>7. Jaké API je nástupcem OpenGL?</b></p><label><input type="radio" name="q7" value="A"> DirectX
+            11</label><br><label><input type="radio" name="q7" value="B"> SDL</label><br><label><input type="radio"
+                name="q7" value="C"> Vulkan</label><br><label><input type="radio" name="q7" value="D"> Metal</label><br>
+    </div>
+    <div class="question" id="q8">
+        <p><b>8. Která část řetězce provádí ořez neviditelných částí?</b></p><label><input type="radio" name="q8"
+                value="A"> Fragment shader</label><br><label><input type="radio" name="q8" value="B">
+            Clipping</label><br><label><input type="radio" name="q8" value="C"> Tesselation</label><br><label><input
+                type="radio" name="q8" value="D"> Framebuffer</label><br>
+    </div>
+    <div class="question" id="q9">
+        <p><b>9. Shadery v OpenGL jsou psané v…</b></p><label><input type="radio" name="q9" value="A">
+            GLSL</label><br><label><input type="radio" name="q9" value="B"> C++</label><br><label><input type="radio"
+                name="q9" value="C"> SPIR-V</label><br><label><input type="radio" name="q9" value="D"> HLSL</label><br>
+    </div>
+    <div class="question" id="q10">
+        <p><b>10. Vektorový součin dává vektor…</b></p><label><input type="radio" name="q10" value="A">
+            rovnoběžný</label><br><label><input type="radio" name="q10" value="B"> kolmý</label><br><label><input
+                type="radio" name="q10" value="C"> opačný</label><br><label><input type="radio" name="q10" value="D">
+            jednotkový</label><br>
+    </div>
+    <div class="question" id="q11">
+        <p><b>11. Co je vektor?</b></p><label><input type="radio" name="q11" value="A"> Pixel</label><br><label><input
+                type="radio" name="q11" value="B"> Transformace</label><br><label><input type="radio" name="q11"
+                value="C"> Prvek s velikostí a směrem</label><br><label><input type="radio" name="q11" value="D">
+            Shader</label><br>
+    </div>
+    <div class="question" id="q12">
+        <p><b>12. Který formát obsahuje kubické Bézierovy křivky?</b></p><label><input type="radio" name="q12"
+                value="A"> BMP</label><br><label><input type="radio" name="q12" value="B"> PNG</label><br><label><input
+                type="radio" name="q12" value="C"> TrueType</label><br><label><input type="radio" name="q12" value="D">
+            PostScript</label><br>
+    </div>
+    <div class="question" id="q13">
+        <p><b>13. Který systém se používá pro transformace v PG?</b></p><label><input type="radio" name="q13" value="A">
+            Homogenní souřadný systém</label><br><label><input type="radio" name="q13" value="B"> Pixel
+            grid</label><br><label><input type="radio" name="q13" value="C"> Rastrový model</label><br><label><input
+                type="radio" name="q13" value="D"> Hex grid</label><br>
+    </div>
+    <div class="question" id="q14">
+        <p><b>14. Co zajišťuje kamera v OpenGL?</b></p><label><input type="radio" name="q14" value="A">
+            Osvětlení</label><br><label><input type="radio" name="q14" value="B"> Barvení
+            pixelů</label><br><label><input type="radio" name="q14" value="C"> Promítání scény</label><br><label><input
+                type="radio" name="q14" value="D"> Optimalizaci GPU</label><br>
+    </div>
+    <div class="question" id="q15">
+        <p><b>15. Co dělá vertex shader?</b></p><label><input type="radio" name="q15" value="A"> Texturuje
+            objekt</label><br><label><input type="radio" name="q15" value="B"> Aplikuje transformace na
+            vrcholy</label><br><label><input type="radio" name="q15" value="C"> Řídí
+            viditelnost</label><br><label><input type="radio" name="q15" value="D"> Řídí alokaci paměti</label><br>
+    </div>
+    <div class="question" id="q16">
+        <p><b>16. Co znamená real-time rendering?</b></p><label><input type="radio" name="q16" value="A"> Vykreslování v
+            reálném čase</label><br><label><input type="radio" name="q16" value="B"> Offline
+            rendering</label><br><label><input type="radio" name="q16" value="C"> Pre-render
+            animací</label><br><label><input type="radio" name="q16" value="D"> Tisková grafika</label><br>
+    </div>
+    <div class="question" id="q17">
+        <p><b>17. Rasterový obraz je tvořen…</b></p><label><input type="radio" name="q17" value="A">
+            křivkami</label><br><label><input type="radio" name="q17" value="B"> vektory</label><br><label><input
+                type="radio" name="q17" value="C"> pixely</label><br><label><input type="radio" name="q17" value="D">
+            mračny bodů</label><br>
+    </div>
+    <div class="question" id="q18">
+        <p><b>18. Vektorový obraz je tvořen…</b></p><label><input type="radio" name="q18" value="A"> matematickými
+            objekty</label><br><label><input type="radio" name="q18" value="B"> pixely</label><br><label><input
+                type="radio" name="q18" value="C"> šumem</label><br><label><input type="radio" name="q18" value="D">
+            mapami</label><br>
+    </div>
+    <div class="question" id="q19">
+        <p><b>19. Jaký standard popisuje OpenGL shadery?</b></p><label><input type="radio" name="q19" value="A">
+            HLSL</label><br><label><input type="radio" name="q19" value="B"> GLSL</label><br><label><input type="radio"
+                name="q19" value="C"> CUDA</label><br><label><input type="radio" name="q19" value="D"> PTX</label><br>
+    </div>
+    <div class="question" id="q20">
+        <p><b>20. Co určuje skalární součin?</b></p><label><input type="radio" name="q20" value="A"> Součet
+            pixelů</label><br><label><input type="radio" name="q20" value="B"> Rychlost světla</label><br><label><input
+                type="radio" name="q20" value="C"> Vztah mezi vektory a jejich úhlem</label><br><label><input
+                type="radio" name="q20" value="D"> Shaderové ID</label><br>
+    </div>
+    <div class="question" id="q21">
+        <p><b>21. Spočítej velikost vektoru (3, 4):</b></p>
+        <input type="text" name="q21" placeholder="">
+    </div>
+
+    <div class="question" id="q22">
+        <p><b>22. Napiš parametrické vyjádření přímky dané body A a B:</b></p>
+        <input type="text" name="q22" placeholder="">
+    </div>
+
+    <div class="question" id="q23">
+        <p><b>23. Otoč bod (1,1) o 90° proti směru hodinových ručiček:</b></p>
+        <input type="text" name="q23" placeholder="">
+    </div>
+
+    <div class="question" id="q24">
+        <p><b>24. Vypočítej skalární součin vektorů (2,3) · (1,3):</b></p>
+        <input type="text" name="q24" placeholder="">
+    </div>
+
+    <div class="question" id="q25">
+        <p><b>25. Urči vektorový součin (1,0,0) × (0,1,0):</b></p>
+        <input type="text" name="q25" placeholder="">
+    </div>
+
+    <button onclick="checkQuiz()">Vyhodnotit</button>
+    <h2 id="result"></h2>
+
+    <script>
+        function checkQuiz() {
+            let score = 0;
+            let total = 25; // 20 teoretických + 5 početních
+
+            // =============================
+            //    1) Kontrola q1–q20 (radio)
+            // =============================
+            for (let q = 1; q <= 20; q++) {
+                let div = document.getElementById("q" + q);
+
+                // Smazání staré správné odpovědi
+                let oldAns = div.querySelector(".correct-answer");
+                if (oldAns) oldAns.remove();
+
+                let chosen = document.querySelector('input[name="q' + q + '"]:checked');
+
+                if (!chosen) {
+                    div.classList.add("incorrect");
+                } else if (chosen.value === answers["q" + q]) {
+                    div.classList.add("correct");
+                    score++;
+                } else {
+                    div.classList.add("incorrect");
+                }
+
+                // Vytvoření textu se správnou odpovědí
+                let correctText = document.createElement("p");
+                correctText.className = "correct-answer";
+                correctText.style.color = "green";
+                correctText.style.fontWeight = "bold";
+                correctText.style.marginTop = "10px";
+
+                const letter = answers["q" + q];
+                const option = div.querySelector('input[value="' + letter + '"]').parentElement.innerText;
+
+                correctText.innerText = "Správná odpověď: " + option;
+                div.appendChild(correctText);
+            }
+
+            // ==================================
+            //    2) Kontrola q21–q25 (text input)
+            // ==================================
+            for (let q = 21; q <= 25; q++) {
+                let div = document.getElementById("q" + q);
+
+                // Smazání staré správné odpovědi
+                let oldAns = div.querySelector(".correct-answer");
+                if (oldAns) oldAns.remove();
+
+                let val = document.querySelector('input[name="q' + q + '"]').value.trim();
+                let correct = answers_numeric["q" + q];
+
+                if (val === correct) {
+                    div.classList.add("correct");
+                    score++;
+                } else {
+                    div.classList.add("incorrect");
+                }
+
+                // Vytvoření textu se správným výsledkem
+                let correctText = document.createElement("p");
+                correctText.className = "correct-answer";
+                correctText.style.color = "green";
+                correctText.style.fontWeight = "bold";
+                correctText.style.marginTop = "10px";
+                correctText.innerText = "Správná odpověď: " + correct;
+
+                div.appendChild(correctText);
+            }
+
+            // ======================
+            // 3) Výpis výsledku
+            // ======================
+            document.getElementById("result").innerHTML =
+                "Výsledek: " + score + " / " + total;
+        }
+    </script>
+
+
+
+</body>
+
+</html>
